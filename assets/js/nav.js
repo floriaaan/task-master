@@ -35,3 +35,8 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '        </div>\n' +
     '    </div>\n' +
     '</nav>\n');
+
+$('#search').keyup(function () {
+    let query = $('#search').val();
+    searchInTasks(query);
+});

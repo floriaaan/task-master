@@ -2,43 +2,61 @@ class Task {
 
 
     constructor(name) {
-        this.id = localStorage.length;
+        this.id = 'task-' + localStorage.length;
         this.name = name; // Nom de la tâche
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
     }
 
     addMember(member) {
+        member.save()
         this.members.push(member.id);
+        console.log('addM', this.members)
     }
 
     save() {
-        localStorage.setItem("task-" + this.id, JSON.stringify(this));
+        localStorage.setItem(this.id, JSON.stringify(this));
     }
 
     read() {
-        //display a card
-        console.log(JSON.stringify(this));
+        let membersName = "";
+
+        for (let m = 0 ; m < this.members.length; m++) {
+            console.log(this.members[m]);
+            membersName += getMember(this.members[m]).name;
+            if(m !== this.members.length - 1) {
+                membersName += ', ';
+            }
+        }
+        //console.log(membersName)
         if (this.status) {
             $('#tasklist').append(
-                `<li class="list-group-item" id="task-${this.id}">
-                ${this.name}
-                <span>${this.members}</span>
-                <span class="badge badge-success">Finie</span>
-                <button class="btn btn-warning">Décompléter</button>
-                <button class="btn btn-danger" onclick="getAndDelete(${this.id})">Supprimer</button>
-            </li>`
-            );
+                `<div class="row justify-content-between task p-2" id="${this.id}">
+                        <div>
+                            <p class="lead">${this.name}</p>
+                            <span>${membersName}</span>
+                        </div>
+                        
+                        <div class="">
+                            <span class="badge badge-success mx-2">Finie</span>
+                            <button class="btn btn-warning mx-2">Décompléter</button>
+                            <button class="btn btn-danger mx-2" onclick="getAndDelete(\'${this.id}\')">Supprimer</button>
+                        </div>
+                    </div>`);
         } else {
             $('#tasklist').append(
-                `<li class="list-group-item" id="task-${this.id}">
-                ${this.name}
-                <span>${this.members}</span>
-                <span class="badge badge-danger">En cours</span>
-                <button class="btn btn-success">Compléter</button>
-                <button class="btn btn-danger" onclick="getAndDelete(${this.id})">Supprimer</button>
-            </li>`
-            );
+                `<div class="row justify-content-between task p-2" id="${this.id}">
+                        <div>
+                            <p class="lead">${this.name}</p>
+                            <span>${this.members}</span>
+                        </div>
+                        
+                        <div class="">
+                            <span class="badge badge-danger mx-2">En cours</span>
+                            <button class="btn btn-success mx-2">Compléter</button>
+                            <button class="btn btn-danger mx-2" onclick="getAndDelete(\'${this.id}\')">Supprimer</button>
+                        </div>
+                    </div>`);
         }
 
     }
@@ -50,12 +68,12 @@ class Task {
     }
 
     delete() {
-        localStorage.removeItem("task-" + this.id);
-        $('#task-' + this.id).remove();
+        localStorage.removeItem(this.id);
+        $('#' + this.id).remove();
     }
 }
 
-function get(id) {
+function getTask(id) {
     for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
         if (object !== null && object.id === id) {
@@ -65,7 +83,6 @@ function get(id) {
 }
 
 function createTask(name) {
-    console.log(name);
     if (name != null) {
         let t = new Task(name);
         t.save();
@@ -90,7 +107,7 @@ function deleteAllTasks() {
 function putAllTasks() {
     for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
-        if (object !== null) {
+        if (object !== null && object.id.includes('task')) {
             let t = convertJsonToTask(object);
             t.read();
         }
@@ -99,7 +116,18 @@ function putAllTasks() {
 }
 
 function getAndDelete(id) {
-    let task = get(id);
+    let task = getTask(id);
     task.delete()
 
+}
+
+function searchInTasks(query) {
+    for (let task in localStorage) {
+        let object = JSON.parse(localStorage.getItem(task));
+        if (object !== null && (object.name.includes(query) || object.members.includes(query))) {
+            let t = convertJsonToTask(object);
+            t.read();
+        }
+
+    }
 }
