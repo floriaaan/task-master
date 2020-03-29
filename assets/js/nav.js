@@ -38,5 +38,11 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
 
 $('#search').keyup(function () {
     let query = $('#search').val();
-    searchInTasks(query);
+    console.log(query)
+    $('#tasklist').empty()
+    if (query !== '' && query != null) {
+        searchInTasks(query);
+    } else {
+        putAllTasks()
+    }
 });

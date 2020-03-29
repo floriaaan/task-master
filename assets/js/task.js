@@ -21,13 +21,15 @@ class Task {
     read() {
         let membersName = "";
 
-        for (let m = 0 ; m < this.members.length; m++) {
-            console.log(this.members[m]);
-            membersName += getMember(this.members[m]).name;
-            if(m !== this.members.length - 1) {
-                membersName += ', ';
+        if (this.members != null) {
+            for (let m = 0 ; m < this.members.length; m++) {
+                membersName += getMember(this.members[m]).name;
+                if(m !== this.members.length - 1) {
+                    membersName += ', ';
+                }
             }
         }
+
         //console.log(membersName)
         if (this.status) {
             $('#tasklist').append(
@@ -124,7 +126,7 @@ function getAndDelete(id) {
 function searchInTasks(query) {
     for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
-        if (object !== null && (object.name.includes(query) || object.members.includes(query))) {
+        if (object !== null && object.id.includes('task') && (object.name.toLowerCase().includes(query.toLowerCase()))) {
             let t = convertJsonToTask(object);
             t.read();
         }
