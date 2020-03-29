@@ -32,12 +32,11 @@ class Member {
 }
 
 function deleteAllMembers() {
-    console.log(localStorage);
+
     for (let i in localStorage) {
         if(i.includes('member')) {
             localStorage.removeItem(i);
         }
     }
-    console.log(localStorage);
 
 }
