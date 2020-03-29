@@ -12,21 +12,30 @@
     <title>Hello JavaScript!</title>
 </head>
 <body id="body">
+<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+<script src="assets/js/nav.js"></script>
 <noscript>
     <div class="jumbotron">
         <h1 class="display-4">Votre navigateur ne supporte pas le JavaScript</h1>
     </div>
 </noscript>
 
+<div class="container p-5">
+    <h1 class="display-4">Task Master</h1>
+    <p class="lead p-5" id="tasklist"></p>
+    <div class="row justify-content-end jumbotron">
+        <button class="btn btn-success mx-2" onclick="createTask()">Ajouter une tâche</button>
+        <button class="btn btn-danger mx-2" onclick="deleteAllMembers();deleteAllTasks();">Tout supprimer</button>
 
-<!-- CODE -->
+    </div>
+</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script
-        src="https://code.jquery.com/jquery-3.4.1.js"
-        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-        crossorigin="anonymous"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
@@ -34,6 +43,28 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
-<script src="assets/js/nav.js"></script>
+
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/task.js"></script>
+<script src="assets/js/member.js"></script>
+<script>
+
+
+
+
+    console.log(localStorage)
+
+
+    //
+    for (let task in localStorage) {
+        let object = JSON.parse(localStorage.getItem(task));
+        if (object !== null) {
+            $('#tasklist').append(JSON.stringify(object) + '\n');
+        }
+
+    }
+
+</script>
+
 </body>
 </html>
