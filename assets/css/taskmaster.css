@@ -6,3 +6,18 @@
     background-color: #e9ecef;
     border-radius: .3rem;
 }
+
+.color-white{
+    color: white;
+}
+
+/* Search bar */
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: fixed;
+    width: 2.375rem;
+    text-align: center;
+}

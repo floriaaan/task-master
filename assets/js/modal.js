@@ -82,3 +82,24 @@ $('#body').append('<div class="modal fade" id="login" tabindex="-1" role="dialog
     '    </div>\n' +
     '  </div>\n' +
     '</div>');
+
+
+$('#body').append('<div class="modal fade" id="archiveTaskModal" tabindex="-1" role="dialog" aria-hidden="true">\n' +
+    '  <div class="modal-dialog" role="document">\n' +
+    '    <div class="modal-content">\n' +
+    '      <div class="modal-header">\n' +
+    '        <h5 class="modal-title">Archiver une tâche</h5>\n' +
+    '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+    '          <span aria-hidden="true">&times;</span>\n' +
+    '        </button>\n' +
+    '      </div>\n' +
+    '      <div class="modal-body">\n' +
+    '        <p class="lead">Es-tu sûr de vouloir archiver cette tâche ?</p>\n' +
+    '      </div>\n' +
+    '      <div class="modal-footer">\n' +
+    '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
+    '        <button type="button" class="btn btn-primary" id="archiveModal-btn">Archiver</button>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '</div>');
