@@ -41,3 +41,42 @@ $('#body').append('<div class="modal fade" id="deleteTaskModal" tabindex="-1" ro
     '    </div>\n' +
     '  </div>\n' +
     '</div>');
+
+$('#body').append('<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-hidden="true">\n' +
+    '  <div class="modal-dialog" role="document">\n' +
+    '    <div class="modal-content">\n' +
+    '      <div class="modal-header">\n' +
+    '        <h5 class="modal-title" id="exampleModalLabel">Se connecter</h5>\n' +
+    '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+    '          <span aria-hidden="true">&times;</span>\n' +
+    '        </button>\n' +
+    '      </div>\n' +
+    '      <div class="modal-body">\n' +
+    '           <div id="firebaseui-auth-container"></div>' +
+    '      </div>\n' +
+    '      <div class="modal-footer">\n' +
+    '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '</div>');
+
+$('#body').append('<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-hidden="true">\n' +
+    '  <div class="modal-dialog" role="document">\n' +
+    '    <div class="modal-content">\n' +
+    '      <div class="modal-header">\n' +
+    '        <h5 class="modal-title" id="exampleModalLabel">Créer un compte</h5>\n' +
+    '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+    '          <span aria-hidden="true">&times;</span>\n' +
+    '        </button>\n' +
+    '      </div>\n' +
+    '      <div class="modal-body">\n' +
+    '           ' +
+    '      </div>\n' +
+    '      <div class="modal-footer">\n' +
+    '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '  </div>\n' +
+    '</div>');
+

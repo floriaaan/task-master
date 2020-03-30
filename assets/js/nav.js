@@ -18,15 +18,13 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                <a class="nav-link" href="#">Lien</a>\n' +
     '            </li>\n' +
     '            <li class="nav-item dropdown">\n' +
-    '                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"\n' +
+    '                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"\n' +
     '                   aria-haspopup="true" aria-expanded="false">\n' +
-    '                    Menu\n' +
+    '                    Authentification\n' +
     '                </a>\n' +
-    '                <div class="dropdown-menu" aria-labelledby="navbarDropdown">\n' +
-    '                    <a class="dropdown-item" href="#">Action</a>\n' +
-    '                    <a class="dropdown-item" href="#">Autre action</a>\n' +
-    '                    <div class="dropdown-divider"></div>\n' +
-    '                    <a class="dropdown-item" href="#">Encore une autre action</a>\n' +
+    '                <div class="dropdown-menu" style="width: 100vh; margin-right: 0" aria-labelledby="navbarDropdown">\n' +
+    '                    <div class="dropdown-item" onclick="$(\'#login\').modal(\'show\')">Se connecter</div>\n' +
+    '                    <div class="dropdown-item" onclick="$(\'#register\').modal(\'show\')">Créer un compte</div>\n' +
     '                </div>\n' +
     '            </li>\n' +
     '        </ul>\n' +
@@ -46,3 +44,4 @@ $('#search').keyup(function () {
         putAllTasks()
     }
 });
+

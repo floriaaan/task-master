@@ -10,7 +10,7 @@ class Task {
     }
 
     addMember(member) {
-        member.save()
+        member.save();
         this.members.push(member.id);
         console.log('addM', this.members)
     }
@@ -110,7 +110,7 @@ function deleteAllTasks() {
 function putAllTasks() {
     for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
-        if (object !== null && object.id.includes('task')) {
+        if (object.id != null && object.id.includes('task')) {
             let t = convertJsonToTask(object);
             t.read();
         }
