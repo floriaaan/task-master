@@ -13,7 +13,13 @@ class Member {
     }
 
     read() {
-        //display a card
+        $('#memberlist').append(
+            `<div class="row justify-content-between task p-2" id="${this.id}">
+                            <p class="lead">${this.id}</p>
+                            <p class="lead">${this.name}</p>
+                            <p class="lead">${this.role}</p>
+
+             </div>`);
     }
 
     update() {
@@ -42,4 +48,15 @@ function deleteAllMembers() {
 
 function getMember(id) {
     return convertJsonToMember(JSON.parse(localStorage.getItem(id)))
+}
+
+function putAllMembers() {
+    for (let member in localStorage) {
+        let object = JSON.parse(localStorage.getItem(member));
+        if (object.id != null && object.id.includes('member')) {
+            let t = convertJsonToMember(object);
+            t.read();
+        }
+
+    }
 }
