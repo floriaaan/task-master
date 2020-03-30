@@ -18,7 +18,7 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"/>
     <link rel="stylesheet" href="assets/css/taskmaster.css">
 
-    <title>Hello JavaScript!</title>
+    <title>Archives</title>
 </head>
 <body id="body">
 <script src="https://code.jquery.com/jquery-3.4.1.js"
@@ -41,17 +41,9 @@
 </noscript>
 
 <div class="container p-5">
-    <h1 class="display-4">Task Master</h1>
+    <h1 class="display-4">Archived tasks</h1>
     <hr class="mx-5 my-4">
     <div class="" id="tasklist"></div>
-    <div class="row justify-content-end jumbotron mt-5">
-        <button class="btn btn-success mx-2" data-toggle="modal" data-target="#addTaskModal"
-                onclick="$('#taskName').focus()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Ajouter une tâche
-        </button>
-        <button class="btn btn-danger mx-2" onclick="deleteAllAndClear()"><i class="fa fa-trash"></i>&nbsp;&nbsp;Tout
-            supprimer
-        </button>
-    </div>
 </div>
 
 <!-- Optional JavaScript -->
@@ -64,20 +56,12 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
-
 <script src="assets/js/utils.js"></script>
 
 <script src="assets/js/task.js"></script>
 <script src="assets/js/member.js"></script>
 <script>
-    // let test = new Task('Faire l\'apéro');
-    // test.addMember(new Member('Florian', 'admin'));
-    // test.addMember(new Member('Ophélie', 'user'));
-    // test.status = 1;
-    // test.save();
-    let test = new Task('Faire l\'apéro');
-
-    putAllTasks();
+    putArchivedTasks();
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' +
-    '    <a class="navbar-brand d-flex" href="/index.html">\n' +
+    '    <a class="navbar-brand d-flex" href="index.html">\n' +
     '        <img src="assets/img/js.png" width="30" height="30" alt="Hello JS">\n' +
     '        <span class="align-content-center ml-3">Hello JS</span>\n' +
     '\n' +
@@ -29,6 +29,9 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '            </li>\n' +
     '            <li class="nav-item">\n' +
     '                <a class="nav-link" href="membre.html">Liste des membres</a>\n' +
+    '            </li>\n' +
+    '            <li class="nav-item">\n' +
+    '                <a class="nav-link" href="archive.html">Archived tasks</a>\n' +
     '            </li>\n' +
     '        </ul>\n' +
     '        <div class="form-inline my-2 my-lg-0">\n' +

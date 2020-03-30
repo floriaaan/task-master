@@ -46,8 +46,8 @@ class Task {
                         
                         <div class="">
                             <span class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')">Décompléter</button>
-                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')">Supprimer</button>
+                            <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Décompléter</button>
+                            <button class="btn btn-secondary mx-2" onclick="toggleArchived(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
                     </div>`);
         } else {
@@ -60,8 +60,8 @@ class Task {
                         
                         <div class="">
                             <span class="badge badge-danger mx-2">En cours</span>
-                            <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')">Compléter</button>
-                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')">Supprimer</button>
+                            <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Compléter</button>
+                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>`);
         }
@@ -102,7 +102,7 @@ function deleteAllTasks() {
         }
     }
 
-    console.log(localStorage);
+    // console.log(localStorage);
 
 }
 
@@ -110,10 +110,23 @@ function putAllTasks() {
     for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
         if (object.id != null && object.id.includes('task')) {
-            let t = convertJsonToTask(object);
-            t.read();
+            if (object.archived !== 1) {
+                let t = convertJsonToTask(object);
+                t.read();
+            }
         }
+    }
+}
 
+function putArchivedTasks() {
+    for (let task in localStorage) {
+        let object = JSON.parse(localStorage.getItem(task));
+        if (object.id != null && object.id.includes('task')) {
+            if (object.archived === 1) {
+                let t = convertJsonToTask(object);
+                t.read();
+            }
+        }
     }
 }
 
@@ -153,7 +166,7 @@ function toggleCompleted(id) {
 
 function toggleArchived(id) {
     let task = getTask(id);
-    (task.archived) ? task.archived = 0 : task.archived = 1;
+    (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
     task.save();
     refreshTask();
 }
@@ -164,7 +177,7 @@ $.ajax({
     url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks?maxRecords=3&view=Grid%20view",
     type: "GET",
     datatype: 'json',
-    headers : {"Authorization" : "Bearer keywEghO0vQCyajkK"},
+    headers: {"Authorization": "Bearer keywEghO0vQCyajkK"},
     success: function (data) {
         console.log(data);
     },
