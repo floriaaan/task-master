@@ -31,12 +31,12 @@ $('#body').append('<div class="modal fade" id="deleteTaskModal" tabindex="-1" ro
     '        </button>\n' +
     '      </div>\n' +
     '      <div class="modal-body">\n' +
-    '        ...\n' +
-    '        <input type="hidden" id="delete" value="">' +
+    '        <p class="lead">Es-tu sûr de vouloir supprimer cette tâche ?</p>\n' +
+    '        <input type="hidden" id="deleteInput" value="">' +
     '      </div>\n' +
     '      <div class="modal-footer">\n' +
     '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
-    '        <button type="button" class="btn btn-primary" onclick="deleteTask($(\'#delete\').value());">Ajouter une tâche</button>\n' +
+    '        <button type="button" class="btn btn-primary" id="deleteModal-btn">Supprimer</button>\n' +
     '      </div>\n' +
     '    </div>\n' +
     '  </div>\n' +

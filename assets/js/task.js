@@ -6,6 +6,7 @@ class Task {
         this.name = name; // Nom de la tâche
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
+        this.archived = 0;
     }
 
     addMember(member) {
@@ -41,8 +42,8 @@ class Task {
                         
                         <div class="">
                             <span class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-warning mx-2">Décompléter</button>
-                            <button class="btn btn-danger mx-2" onclick="getAndDelete(\'${this.id}\')">Supprimer</button>
+                            <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')">Décompléter</button>
+                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')">Supprimer</button>
                         </div>
                     </div>`);
         } else {
@@ -55,8 +56,8 @@ class Task {
                         
                         <div class="">
                             <span class="badge badge-danger mx-2">En cours</span>
-                            <button class="btn btn-success mx-2">Compléter</button>
-                            <button class="btn btn-danger mx-2" onclick="getAndDelete(\'${this.id}\')">Supprimer</button>
+                            <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')">Compléter</button>
+                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')">Supprimer</button>
                         </div>
                     </div>`);
         }
@@ -117,10 +118,16 @@ function putAllTasks() {
     }
 }
 
-function getAndDelete(id) {
+function deleteModal(id) {
     let task = getTask(id);
-    task.delete()
+    //$('#deleteInput').val(this.id);
+    $('#deleteTaskModal').modal('show');
 
+
+    $('#deleteModal-btn').click(function () {
+        task.delete();
+        $('#deleteTaskModal').modal('hide');
+    });
 }
 
 function searchInTasks(query) {
@@ -132,4 +139,16 @@ function searchInTasks(query) {
         }
 
     }
+}
+
+function refreshTask() {
+    $('#tasklist').empty();
+    putAllTasks();
+}
+
+function toggleCompleted(id) {
+    let task = getTask(id);
+    (task.status) ? task.status = 0 : task.status = 1;
+    task.save();
+    refreshTask();
 }
