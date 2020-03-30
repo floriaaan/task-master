@@ -28,6 +28,7 @@
 <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
 
+
 <!-- Add Firebase products that you want to use -->
 <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-firestore.js"></script>
@@ -45,11 +46,12 @@
     <hr class="mx-5 my-4">
     <div class="" id="tasklist"></div>
     <div class="row justify-content-end jumbotron mt-5">
-        <button class="btn btn-success mx-2" data-toggle="modal" data-target="#addTaskModal"
-                onclick="$('#taskName').focus()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Ajouter une tâche
+        <button class="btn btn-success mx-2"
+                onclick="if(!$('#addtask-btn').hasClass('disabled')){$('#addTaskModal').modal('show');}"
+                id="addtask-btn">Ajouter une tâche
         </button>
-        <button class="btn btn-danger mx-2" onclick="deleteAllAndClear()"><i class="fa fa-trash"></i>&nbsp;&nbsp;Tout
-            supprimer
+        <button class="btn btn-danger mx-2" id="deleteAllLocalStorage-btn"
+                onclick="if(!$('#deleteAllLocalStorage-btn').hasClass('disabled')){deleteAllAndClear();}">Tout supprimer
         </button>
     </div>
 </div>
@@ -75,8 +77,6 @@
     // test.addMember(new Member('Ophélie', 'user'));
     // test.status = 1;
     // test.save();
-    let test = new Task('Faire l\'apéro');
-
     putAllTasks();
 </script>
 </body>
