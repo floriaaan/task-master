@@ -15,7 +15,7 @@ class Task {
     }
 
     addUser() {
-        if(userLoggged != null) {
+        if (userLoggged != null) {
             this.addMember(new Member(userLoggged.displayName, 'owner'));
         }
     }
@@ -66,12 +66,6 @@ class Task {
                     </div>`);
         }
 
-    }
-
-    update() {
-        //display a modal
-        //make modifications
-        this.save()
     }
 
     delete() {
@@ -125,7 +119,6 @@ function putAllTasks() {
 
 function deleteModal(id) {
     let task = getTask(id);
-    //$('#deleteInput').val(this.id);
     $('#deleteTaskModal').modal('show');
 
 
@@ -157,3 +150,25 @@ function toggleCompleted(id) {
     task.save();
     refreshTask();
 }
+
+function toggleArchived(id) {
+    let task = getTask(id);
+    (task.archived) ? task.archived = 0 : task.archived = 1;
+    task.save();
+    refreshTask();
+}
+
+//api key:keywEghO0vQCyajkK
+
+$.ajax({
+    url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks?maxRecords=3&view=Grid%20view",
+    type: "GET",
+    datatype: 'json',
+    headers : {"Authorization" : "Bearer keywEghO0vQCyajkK"},
+    success: function (data) {
+        console.log(data);
+    },
+    error: function (data) {
+        console.log(data)
+    }
+});

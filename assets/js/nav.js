@@ -62,16 +62,7 @@ var ui = new firebaseui.auth.AuthUI(firebase.auth());
 ui.start('#firebaseui-auth-container', {
     signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID
-    ],
-    callbacks: {
-        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-            // User successfully signed in.
-            // Return type determines whether we continue the redirect automatically
-            // or whether we leave that to developer to handle.
-            return false;
-        }
-    }
-    // Other config options...
+    ]
 });
 
 var userLoggged = null;
@@ -98,6 +89,11 @@ initApp = function () {
             $('#sign-in').removeClass('d-none');
             $('#auth').html('Mon compte');
             userLoggged = null;
+            ui.start('#firebaseui-auth-container', {
+                signInOptions: [
+                    firebase.auth.EmailAuthProvider.PROVIDER_ID
+                ]
+            });
 
         }
     }, function (error) {
