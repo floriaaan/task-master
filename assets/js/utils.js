@@ -7,11 +7,26 @@ function convertJsonToTask(json) {
     return task;
 }
 
+function convertAirtableToTask(json) {
+    let task = new Task(json.fields.name);
+    task.id = json.id;
+    task.members = json.fields.members;
+    task.status = json.fields.status;
+
+    return task;
+}
+
 function convertJsonToMember(json) {
     let member = new Member(json.name, json.role);
     member.id = json.id;
 
-    member.save();
+    return member;
+}
+
+function convertAirtableToMember(json) {
+    let member = new Member(json.fields.name, json.fields.role);
+    member.id = json.id;
+
     return member;
 }
 

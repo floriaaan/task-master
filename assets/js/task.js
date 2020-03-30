@@ -20,21 +20,77 @@ class Task {
         }
     }
 
+    update() {
+        //localStorage.setItem(this.id, JSON.stringify(this));
+
+        $.ajax({
+            url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks/" + this.id,
+            type: "PUT",
+            headers : {
+                "Authorization": "Bearer keywEghO0vQCyajkK",
+                "Content-Type": "application/json"
+            },
+            data: {
+                "fields": {
+                    "id": this.id,
+                    "name": this.name,
+                    "members": this.members,
+                    "status": this.status,
+                    "archived": this.archived
+                }
+            },
+            success: function () {
+                console.log('success')
+            },
+            error: function () {
+                console.log('error')
+            }
+
+
+        })
+    }
+
     save() {
-        localStorage.setItem(this.id, JSON.stringify(this));
+        $.ajax({
+            url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks/",
+            type: "POST",
+            headers : {
+                "Authorization": "Bearer keywEghO0vQCyajkK",
+                "Content-Type": "application/json"
+            },
+            data: {
+                "fields": {
+                    "id": this.id,
+                    "name": this.name,
+                    "members": this.members,
+                    "status": this.status,
+                    "archived": this.archived
+                }
+            },
+            success: function () {
+                console.log('success')
+            },
+            error: function () {
+                console.log('error')
+            }
+
+
+        })
     }
 
     read() {
         let membersName = "";
 
-        if (this.members != null) {
+        /*if (this.members != null) {
             for (let m = 0; m < this.members.length; m++) {
-                membersName += getMember(this.members[m]).name;
+                let member = getMember(this.members[m]);
+                console.log(member);
+                membersName += member.name;
                 if (m !== this.members.length - 1) {
                     membersName += ', ';
                 }
             }
-        }
+        }*/
 
         if (this.status) {
             $('#tasklist').append(
@@ -75,12 +131,31 @@ class Task {
 }
 
 function getTask(id) {
-    for (let task in localStorage) {
+    /*for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
         if (object !== null && object.id === id) {
             return convertJsonToTask(object);
         }
-    }
+    }*/
+    $.ajax({
+        url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks",
+        type: "GET",
+        headers: {"Authorization": "Bearer keywEghO0vQCyajkK"},
+        done: function (data) {
+
+            console.log(data);
+            for (let i = 0; i < data.records.length; i++) {
+                if(data.records[i].id === id) {
+                    let task = convertAirtableToTask(data.records[i]);
+                    console.log(task);
+                    return task;
+                }
+            }
+        },
+        error: function (data) {
+            console.log(data)
+        }
+    });
 }
 
 function createTask(name) {
@@ -107,14 +182,30 @@ function deleteAllTasks() {
 }
 
 function putAllTasks() {
-    for (let task in localStorage) {
+    /*for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
         if (object.id != null && object.id.includes('task')) {
             let t = convertJsonToTask(object);
             t.read();
         }
 
-    }
+    }*/
+    $.ajax({
+        url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks",
+        type: "GET",
+        headers: {"Authorization": "Bearer keywEghO0vQCyajkK"},
+        success: function (data) {
+
+            for (let i = 0; i < data.records.length; i++) {
+                let task = convertAirtableToTask(data.records[i]);
+                task.read();
+            }
+        },
+        error: function (data) {
+            console.log(data)
+        }
+    });
+
 }
 
 function deleteModal(id) {
@@ -160,15 +251,3 @@ function toggleArchived(id) {
 
 //api key:keywEghO0vQCyajkK
 
-$.ajax({
-    url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks?maxRecords=3&view=Grid%20view",
-    type: "GET",
-    datatype: 'json',
-    headers : {"Authorization" : "Bearer keywEghO0vQCyajkK"},
-    success: function (data) {
-        console.log(data);
-    },
-    error: function (data) {
-        console.log(data)
-    }
-});
