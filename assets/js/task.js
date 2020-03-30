@@ -14,9 +14,11 @@ class Task {
         this.members.push(member.id);
     }
 
-    save() {
-
+    addUser() {
         this.addMember(new Member(userLoggged.displayName, 'owner'));
+    }
+
+    save() {
         localStorage.setItem(this.id, JSON.stringify(this));
     }
 
@@ -88,6 +90,7 @@ function getTask(id) {
 function createTask(name) {
     if (name != null) {
         let t = new Task(name);
+        t.addUser();
         t.save();
         t.read();
     }
