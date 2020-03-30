@@ -15,7 +15,9 @@ class Task {
     }
 
     addUser() {
-        this.addMember(new Member(userLoggged.displayName, 'owner'));
+        if(userLoggged != null) {
+            this.addMember(new Member(userLoggged.displayName, 'owner'));
+        }
     }
 
     save() {
