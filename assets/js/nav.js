@@ -84,11 +84,16 @@ initApp = function () {
                 $('#sign-in').addClass('d-none');
                 userLoggged = user;
                 $('#login').modal('hide');
+                $('#addtask-btn').removeClass('disabled');
+                $('#deleteAllLocalStorage-btn').removeClass('disabled');
             });
 
         } else {
             // User is signed out.
             $('#sign-out').addClass('d-none');
+            $('#addtask-btn').addClass('disabled');
+            $('#deleteAllLocalStorage-btn').addClass('disabled');
+
             $('#sign-in').removeClass('d-none');
             $('#auth').html('Mon compte');
             userLoggged = null;

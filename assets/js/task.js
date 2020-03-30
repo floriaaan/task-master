@@ -158,7 +158,6 @@ function toggleArchived(id) {
     refreshTask();
 }
 
-//api key:keywEghO0vQCyajkK
 
 $.ajax({
     url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks?maxRecords=3&view=Grid%20view",
