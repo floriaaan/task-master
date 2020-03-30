@@ -4,7 +4,6 @@ function convertJsonToTask(json) {
     task.members = json.members;
     task.status = json.status;
 
-    task.save();
     return task;
 }
 

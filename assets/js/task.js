@@ -12,10 +12,11 @@ class Task {
     addMember(member) {
         member.save();
         this.members.push(member.id);
-        console.log('addM', this.members)
     }
 
     save() {
+
+        this.addMember(new Member(userLoggged.displayName, 'owner'));
         localStorage.setItem(this.id, JSON.stringify(this));
     }
 
@@ -23,15 +24,14 @@ class Task {
         let membersName = "";
 
         if (this.members != null) {
-            for (let m = 0 ; m < this.members.length; m++) {
+            for (let m = 0; m < this.members.length; m++) {
                 membersName += getMember(this.members[m]).name;
-                if(m !== this.members.length - 1) {
+                if (m !== this.members.length - 1) {
                     membersName += ', ';
                 }
             }
         }
 
-        //console.log(membersName)
         if (this.status) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
@@ -51,7 +51,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${this.members}</span>
+                            <span>${membersName}</span>
                         </div>
                         
                         <div class="">

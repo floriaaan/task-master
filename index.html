@@ -8,6 +8,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth__fr.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css" />
+
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
     <link rel="stylesheet" href="assets/css/taskmaster.css">
@@ -15,10 +19,17 @@
     <title>Hello JavaScript!</title>
 </head>
 <body id="body">
-<script
-        src="https://code.jquery.com/jquery-3.4.1.js"
+<script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
         crossorigin="anonymous"></script>
+<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
+
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-firestore.js"></script>
+<script src="assets/js/modal.js"></script>
 <script src="assets/js/nav.js"></script>
 <noscript>
     <div class="jumbotron">
@@ -28,11 +39,6 @@
 
 <div class="container p-5">
     <h1 class="display-4">Task Master</h1>
-    <hr class="mx-5 my-4">
-
-
-
-
 
     <hr class="mx-5 my-4">
 
@@ -54,50 +60,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
 
-
-<!-- Add Firebase products that you want to use -->
-<script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-firestore.js"></script>
-<script src="assets/js/modal.js"></script>
-<script>
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-        apiKey: "AIzaSyBeRRFvk1YjGEaKpKAAdlDuwS-d4rFV4Hg",
-        authDomain: "jsproject-15258.firebaseapp.com",
-        databaseURL: "https://jsproject-15258.firebaseio.com",
-        projectId: "jsproject-15258",
-        storageBucket: "jsproject-15258.appspot.com",
-        messagingSenderId: "655168015986",
-        appId: "1:655168015986:web:4ebe3414b21e2b6e10bceb"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-
-    var ui = new firebaseui.auth.AuthUI(firebase.auth());
-    ui.start('#firebaseui-auth-container', {
-        signInOptions: [
-            firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ],
-        callbacks: {
-            signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-                // User successfully signed in.
-                // Return type determines whether we continue the redirect automatically
-                // or whether we leave that to developer to handle.
-                return false;
-            },
-            uiShown: function() {
-                // The widget is rendered.
-                // Hide the loader.
-                document.getElementById('loader').style.display = 'none';
-            }
-        }
-        // Other config options...
-    });
-
-</script>
 
 <script src="assets/js/utils.js"></script>
 
