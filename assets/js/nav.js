@@ -27,6 +27,9 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                    <div class="dropdown-item d-none" id="sign-out">Déconnexion</pre></div>' +
     '                </div>\n' +
     '            </li>\n' +
+    '            <li class="nav-item">\n' +
+    '                <a class="nav-link" href="membre.html">Liste des membres</a>\n' +
+    '            </li>\n' +
     '        </ul>\n' +
     '        <div class="form-inline my-2 my-lg-0">\n' +
     '            <input class="form-control mr-sm-2" id="search" placeholder="Recherche">\n' +
