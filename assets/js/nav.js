@@ -92,6 +92,7 @@ initApp = function () {
                 $('#sign-out').removeClass('d-none');
                 $('#sign-in').addClass('d-none');
                 userLoggged = user;
+                $('#login').modal('hide');
             });
 
         } else {
