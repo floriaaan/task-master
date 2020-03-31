@@ -1,3 +1,4 @@
+//pop-up ajouter une tâche
 $('#body').append('<div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog" aria-hidden="true">\n' +
     '  <div class="modal-dialog" role="document">\n' +
     '    <div class="modal-content">\n' +
@@ -11,16 +12,26 @@ $('#body').append('<div class="modal fade" id="addTaskModal" tabindex="-1" role=
     '        <div class="form-group">\n' +
     '            <label for="taskName">Nom de la tâche</label>\n' +
     '            <input type="text" class="form-control" id="taskName">\n' +
+    '            <label for="taskDate">Doit être fait pour le </label>\n' +
+    '            <input type="datetime-local" class="form-control" id="taskDate">\n' +
+    '                 <label for="taskDate">Temps de rappel </label>\n' +
+    '                 <select class="form-control" name="timeSelect" id="taskRappel"> '+
+    '                 <option value="0">--selectionner le temps avant le rappel--</option>'+
+    '                 <option value="5">5 minutes</option>'+
+    '                 <option value="10">10 minutes</option>'+
+    '                 <option value="15">15 minutes</option>'+         
+    '            </select>' +
     '         </div>\n' +
     '      </div>\n' +
     '      <div class="modal-footer">\n' +
     '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
-    '        <button type="button" class="btn btn-primary" onclick="createTask($(\'#taskName\').val());">Ajouter une tâche</button>\n' +
+    '        <button type="button" class="btn btn-primary" onclick="createTask($(\'#taskName\').val(),$(\'#taskDate\').val(),$(\'#taskRappel\').val());">Ajouter une tâche</button>\n' +
     '      </div>\n' +
     '    </div>\n' +
     '  </div>\n' +
     '</div>');
 
+//
 $('#body').append('<div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-hidden="true">\n' +
     '  <div class="modal-dialog" role="document">\n' +
     '    <div class="modal-content">\n' +
@@ -44,6 +55,8 @@ $('#body').append('<div class="modal fade" id="editTaskModal" tabindex="-1" role
     '  </div>\n' +
     '</div>');
 
+
+//
 $('#body').append('<div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-hidden="true">\n' +
     '  <div class="modal-dialog" role="document">\n' +
     '    <div class="modal-content">\n' +
@@ -64,6 +77,7 @@ $('#body').append('<div class="modal fade" id="deleteTaskModal" tabindex="-1" ro
     '  </div>\n' +
     '</div>');
 
+//pop up login
 $('#body').append('<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-hidden="true">\n' +
     '  <div class="modal-dialog" role="document">\n' +
     '    <div class="modal-content">\n' +
@@ -83,7 +97,7 @@ $('#body').append('<div class="modal fade" id="login" tabindex="-1" role="dialog
     '  </div>\n' +
     '</div>');
 
-
+//Pop up archivage
 $('#body').append('<div class="modal fade" id="archiveTaskModal" tabindex="-1" role="dialog" aria-hidden="true">\n' +
     '  <div class="modal-dialog" role="document">\n' +
     '    <div class="modal-content">\n' +
