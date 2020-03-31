@@ -164,6 +164,8 @@ async function getTask(id) {
         task.members = record.fields.members;
         task.status = record.fields.status;
         task.archived = record.fields.archived;
+        task.dateFin = record.fields.dateFin;
+        task.heureRappel = record.fields.rappel;
         return task;
     });
 }
@@ -230,6 +232,8 @@ function putAllTasks() {
             task.members = taskList[i].fields.members;
             task.status = taskList[i].fields.status;
             task.archived = taskList[i].fields.archived;
+            task.dateFin = taskList[i].fields.dateFin;
+            task.heureRappel = taskList[i].fields.rappel;
             task.read();
         }
 
@@ -263,6 +267,9 @@ function putArchivedTasks() {
             task.members = taskList[i].fields.members;
             task.status = taskList[i].fields.status;
             task.archived = taskList[i].fields.archived;
+            task.dateFin = taskList[i].fields.dateFin;
+            task.heureRappel = taskList[i].fields.rappel;
+
 
             task.read();
         }
