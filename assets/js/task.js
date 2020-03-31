@@ -30,6 +30,7 @@ class Task {
     }
 
 
+
     save() {
         base('tasks').create([
             {
@@ -41,7 +42,8 @@ class Task {
                     "dateFin": this.dateFin,
                     "rappel": this.heureRappel
                 }
-            }
+            },
+
         ], function (err, record) {
             if (err) {
                 console.error(err);
@@ -49,7 +51,6 @@ class Task {
             }
                 console.log(record.getId());
                 this.id = record.getId();
-
         });
     }
 
@@ -176,7 +177,7 @@ async function getTask(id) {
 }
 
 function createTask(name, date, rappel){
-
+    var date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
         //t.addUser();
@@ -203,20 +204,23 @@ function deleteAllTasks() {
 }
 
 function fTime() {
-    var d = new Date();
-    for (let i in localStorage) {
-        if (i.includes('task')) {
-            let task = JSON.parse(i)
-            //console.log(task);
-            if (i.dateFin != null) {
-                if (d >= i.dateFindateFin) {
-                    alert("blablabla");
-                    console.log(d);
+    var now = moment().format("YYYY-MM-DD h:mm");
+    base('tasks').select({
+        view: "Grid view"
+    }).eachPage(function page(records) {
+        // This function (`page`) will get called for each page of records.
+        records.forEach(function (record) {
+            if (record.fields.dateFin !== undefined) {
+                console.log('la valeur de la date est|' + (((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 )) );
+                console.log('Le rappel est |' + record.fields.rappel  +'|');
+                if(((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 ) == record.fields.rappel  ){
+                    alert('Vous avez une tache à effectuer :'+record.fields.name);
                 }
             }
-        }
-        setTimeout(fTime, 1000); /* rappel après 2 secondes = 2000 millisecondes */
-    }
+        });
+    })
+        setTimeout(fTime, 60000); /* rappel après 2 secondes = 2000 millisecondes */
+
 }
 
 
@@ -320,6 +324,7 @@ function searchInTasks(query) {
         let object = JSON.parse(localStorage.getItem(task));
         if (object !== null && object.id.includes('task') && (object.name.toLowerCase().includes(query.toLowerCase())) && object.archived !== 1) {
             let t = convertJsonToTask(object);
+            console.log(object)
             t.read();
         }
 
