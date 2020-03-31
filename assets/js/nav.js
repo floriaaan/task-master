@@ -34,8 +34,9 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                <a class="nav-link" href="archive.html">Archived tasks</a>\n' +
     '            </li>\n' +
     '        </ul>\n' +
-    '        <div class="form-inline my-2 my-lg-0">\n' +
-    '            <input class="form-control mr-sm-2" id="search" placeholder="Recherche">\n' +
+    '        <div class="form-inline has-search my-2 my-lg-0">\n' +
+    '            <span class="fa fa-search form-control-feedback"></span>\n' +
+    '            <input type="search" class="form-control mr-sm-2" id="search" placeholder="Recherche">\n' +
     '        </div>\n' +
     '    </div>\n' +
     '</nav>\n');

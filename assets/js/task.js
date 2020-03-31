@@ -1,6 +1,5 @@
 class Task {
 
-
     constructor(name) {
         this.id = 'task-' + localStorage.length;
         this.name = name; // Nom de la tâche
@@ -48,7 +47,7 @@ class Task {
                         <div class="">
                             <span class="badge badge-success mx-2">Finie</span>
                             <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Décompléter</button>
-                            <button class="btn btn-secondary mx-2" onclick="toggleArchived(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
+                            <button class="btn btn-secondary mx-2" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
                     </div>`);
         } else {
@@ -73,6 +72,7 @@ class Task {
         localStorage.removeItem(this.id);
         $('#' + this.id).remove();
     }
+
 }
 
 function getTask(id) {
@@ -102,8 +102,6 @@ function deleteAllTasks() {
             localStorage.removeItem(i);
         }
     }
-
-    // console.log(localStorage);
 
 }
 
@@ -144,6 +142,18 @@ function deleteModal(id) {
     });
 }
 
+function archiveModal(id) {
+    let task = getTask(id);
+    $('#archiveTaskModal').modal('show');
+
+    $('#archiveModal-btn').click(function () {
+        $('#archiveTaskModal').modal('hide');
+        (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
+        task.save();
+        refreshTask();
+    });
+}
+
 function searchInTasks(query) {
     for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
@@ -163,13 +173,6 @@ function refreshTask() {
 function toggleCompleted(id) {
     let task = getTask(id);
     (task.status) ? task.status = 0 : task.status = 1;
-    task.save();
-    refreshTask();
-}
-
-function toggleArchived(id) {
-    let task = getTask(id);
-    (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
     task.save();
     refreshTask();
 }
