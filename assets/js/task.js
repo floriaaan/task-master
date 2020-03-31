@@ -14,9 +14,8 @@ class Task {
     }
 
     addUser() {
-        if (userLoggged != null) {
+        if (userLoggged != null)
             this.addMember(new Member(userLoggged.displayName, 'owner'));
-        }
     }
 
     save() {
@@ -35,18 +34,31 @@ class Task {
             }
         }
 
-        if (this.status) {
+        if (this.status === 0) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
                             <span>${membersName}</span>
                         </div>
-                        
+
                         <div class="">
-                            <span class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Décompléter</button>
-                            <button class="btn btn-secondary mx-2" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
+                            <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
+                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
+                        </div>
+                    </div>`);
+        } else if (this.status === 1) {
+            $('#tasklist').append(
+                `<div class="row justify-content-between task p-2" id="${this.id}">
+                        <div>
+                            <p class="lead">${this.name}</p>
+                            <span>${membersName}</span>
+                        </div>
+
+                        <div class="">
+                            <span id="enCours" class="badge badge-danger mx-2">En cours</span>
+                            <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
+                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>`);
         } else {
@@ -56,15 +68,14 @@ class Task {
                             <p class="lead">${this.name}</p>
                             <span>${membersName}</span>
                         </div>
-                        
+
                         <div class="">
-                            <span class="badge badge-danger mx-2">En cours</span>
-                            <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Compléter</button>
-                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
+                            <span id="finie" class="badge badge-success mx-2">Finie</span>
+                            <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
+                            <button class="btn btn-secondary mx-2" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
                     </div>`);
         }
-
     }
 
     delete() {
@@ -154,7 +165,7 @@ function archiveModal(id) {
 function searchInTasks(query) {
     for (let task in localStorage) {
         let object = JSON.parse(localStorage.getItem(task));
-        if (object !== null && object.id.includes('task') && (object.name.toLowerCase().includes(query.toLowerCase()))) {
+        if (object !== null && object.id.includes('task') && (object.name.toLowerCase().includes(query.toLowerCase())) && object.archived !== 1) {
             let t = convertJsonToTask(object);
             t.read();
         }
@@ -169,7 +180,14 @@ function refreshTask() {
 
 function toggleCompleted(id) {
     let task = getTask(id);
-    (task.status) ? task.status = 0 : task.status = 1;
+    (task.status === 2) ? task.status = 1 : task.status = 2;
+    task.save();
+    refreshTask();
+}
+
+function startTask(id) {
+    let task = getTask(id);
+    task.status = 1;
     task.save();
     refreshTask();
 }
@@ -181,9 +199,7 @@ $.ajax({
     datatype: 'json',
     headers: {"Authorization": "Bearer keywEghO0vQCyajkK"},
     success: function (data) {
-        console.log(data);
     },
     error: function (data) {
-        console.log(data)
     }
 });
