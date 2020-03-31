@@ -161,17 +161,11 @@ async function getTask(id) {
     });
 }
 
-function createTask(name,dateFin,heureRappel) {
-    console.log(name);
-    console.log(dateFin);
+function createTask(name){
     //console.log(heureRappel);
     if (name != null) {
         let t = new Task(name);
         //t.addUser();
-
-        t.addUser();
-        t.addDateFin(dateFin.toString());
-        t.addHrappel(heureRappel);
         t.save();
         t.read();
         //console.log(this.dateFin)
