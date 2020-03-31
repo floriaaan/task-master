@@ -37,7 +37,9 @@ class Task {
                     "name": this.name,
                     "members": this.members,
                     "status": this.status,
-                    "archived": this.archived
+                    "archived": this.archived,
+                    "dateFin": this.dateFin,
+                    "rappel": this.heureRappel
                 }
             }
         ], function (err, record) {
@@ -59,7 +61,9 @@ class Task {
                     "name": this.name,
                     "members": this.members,
                     "status": this.status,
-                    "archived": this.archived
+                    "archived": this.archived,
+                    "dateFin": this.dateFin,
+                    "rappel": this.heureRappel
                 }
             }
         ], function (err, records) {
@@ -100,7 +104,8 @@ class Task {
                             <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
-                    </div>`);
+                    </div>
+                    <hr class="my-1 mx-4">`);
         } else if (this.status === 1) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
@@ -163,11 +168,13 @@ async function getTask(id) {
     });
 }
 
-function createTask(name){
-    //console.log(heureRappel);
+function createTask(name, date, rappel){
+
     if (name != null) {
         let t = new Task(name);
         //t.addUser();
+        t.addDateFin(date);
+        t.addHrappel(rappel);
         t.save();
         t.read();
         //console.log(this.dateFin)
