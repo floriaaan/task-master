@@ -68,8 +68,9 @@ firebase.initializeApp(firebaseConfig);
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 ui.start('#firebaseui-auth-container', {
     signInOptions: [
-        firebase.auth.EmailAuthProvider.PROVIDER_ID
-    ]
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    ],
+    'credentialHelper': firebaseui.auth.CredentialHelper.NONE
 });
 
 var userLoggged = null;
