@@ -1,12 +1,11 @@
 class Task {
 
     constructor(name) {
-        this.id = 'task-' + localStorage.length;
+        this.id = 'task-';
         this.name = name; // Nom de la tâche
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
         this.archived = 0;
-        this.fromAirtable = 0;
     }
 
     addMember(member) {
@@ -20,20 +19,59 @@ class Task {
     }
 
     save() {
-        localStorage.setItem(this.id, JSON.stringify(this));
+        base('tasks').create([
+            {
+                "fields": {
+                    "name": this.name,
+                    "members": this.members,
+                    "status": this.status,
+                    "archived": this.archived
+                }
+            }
+        ], function (err, record) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+                console.log(record.getId());
+                this.id = record.getId();
+
+        });
+    }
+
+    update() {
+        base('tasks').replace([
+            {
+                "id": this.id,
+                "fields": {
+                    "name": this.name,
+                    "members": this.members,
+                    "status": this.status,
+                    "archived": this.archived
+                }
+            }
+        ], function (err, records) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            records.forEach(function (record) {
+                console.log(record.get('status'));
+            });
+        });
     }
 
     read() {
         let membersName = "";
 
-        if (this.members != null) {
+        /*if (this.members != null) {
             for (let m = 0; m < this.members.length; m++) {
                 membersName += getMember(this.members[m]).name;
                 if (m !== this.members.length - 1) {
                     membersName += ', ';
                 }
             }
-        }
+        }*/
 
         if (this.status === 0) {
             $('#tasklist').append(
@@ -82,25 +120,35 @@ class Task {
     }
 
     delete() {
-        localStorage.removeItem(this.id);
-        $('#' + this.id).remove();
+        base('tasks').destroy([this.id], function (err, deletedRecords) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log('Deleted', deletedRecords.length, 'records');
+            $('\'#' + this.id + '\'').remove();
+        });
     }
 
 }
 
-function getTask(id) {
-    for (let task in localStorage) {
-        let object = JSON.parse(localStorage.getItem(task));
-        if (object !== null && object.id === id) {
-            return convertJsonToTask(object);
-        }
-    }
+async function getTask(id) {
+    return base('tasks').find(id).then(function (record) {
+
+        console.log('Retrieved', record.id);
+        let task = new Task(record.fields.name);
+        task.id = id;
+        task.members = record.fields.members;
+        task.status = record.fields.status;
+        task.archived = record.fields.archived;
+        return task;
+    });
 }
 
 function createTask(name) {
     if (name != null) {
         let t = new Task(name);
-        t.addUser();
+        //t.addUser();
         t.save();
         t.read();
     }
@@ -109,41 +157,73 @@ function createTask(name) {
 
 }
 
-function deleteAllTasks() {
-    for (let i in localStorage) {
-        if (i.includes('task')) {
-            localStorage.removeItem(i);
-        }
-    }
-
-}
 
 function putAllTasks() {
-    for (let task in localStorage) {
-        let object = JSON.parse(localStorage.getItem(task));
-        if (object.id != null && object.id.includes('task')) {
-            if (object.archived !== 1) {
-                let t = convertJsonToTask(object);
-                t.read();
-            }
+    let taskList = [];
+    base('tasks').select({
+        // Selecting the first 3 records in Grid view:
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+
+        records.forEach(function (record) {
+            taskList.push(record);
+        });
+
+        fetchNextPage();
+    }, function done(err) {
+        if (err) {
+            console.error(err);
+            return;
         }
-    }
+
+        for (let i = 0; i < taskList.length; i++) {
+            let task = new Task(taskList[i].fields.name);
+            task.id = taskList[i].id;
+            task.members = taskList[i].fields.members;
+            task.status = taskList[i].fields.status;
+            task.archived = taskList[i].fields.archived;
+            task.read();
+        }
+
+    });
+
 }
 
 function putArchivedTasks() {
-    for (let task in localStorage) {
-        let object = JSON.parse(localStorage.getItem(task));
-        if (object.id != null && object.id.includes('task')) {
-            if (object.archived === 1) {
-                let t = convertJsonToTask(object);
-                t.read();
+    let taskList = [];
+    base('tasks').select({
+        view: "Grid view"
+    }).eachPage(function page(records) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function (record) {
+            if (record.fields.archived !== undefined && record.fields.archived) {
+                taskList.push(record);
             }
+        });
+
+
+    }, function done(err) {
+        if (err) {
+            console.error(err);
+            return;
         }
-    }
+
+        for (let i = 0; i < taskList.length; i++) {
+            let task = new Task(taskList[i].fields.name);
+            task.id = taskList[i].id;
+            task.members = taskList[i].fields.members;
+            task.status = taskList[i].fields.status;
+            task.archived = taskList[i].fields.archived;
+
+            task.read();
+        }
+    });
+
 }
 
-function deleteModal(id) {
-    let task = getTask(id);
+async function deleteModal(id) {
+    let task = await getTask(id);
     $('#deleteTaskModal').modal('show');
 
 
@@ -153,15 +233,16 @@ function deleteModal(id) {
     });
 }
 
-function archiveModal(id) {
-    let task = getTask(id);
-    $('#archiveTaskModal').modal('show');
+async function archiveModal(id) {
+    getTask(id).then(function (task) {
+        $('#archiveTaskModal').modal('show');
 
-    $('#archiveModal-btn').click(function () {
-        $('#archiveTaskModal').modal('hide');
-        (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
-        task.save();
-        refreshTask();
+        $('#archiveModal-btn').click(function () {
+            $('#archiveTaskModal').modal('hide');
+            (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
+            task.update();
+            refreshTask();
+        });
     });
 }
 
@@ -181,19 +262,37 @@ function refreshTask() {
     putAllTasks();
 }
 
-function toggleCompleted(id) {
-    let task = getTask(id);
-    (task.status === 2) ? task.status = 1 : task.status = 2;
-    task.save();
-    refreshTask();
+async function toggleCompleted(id) {
+
+    getTask(id).then(function (task) {
+        (task.status === 2) ? task.status = 1 : task.status = 2;
+        task.update();
+        refreshTask();
+    });
 }
 
 function startTask(id) {
-    let task = getTask(id);
-    task.status = 1;
-    task.save();
-    refreshTask();
+    getTask(id).then(function (task) {
+        task.status = 1;
+        task.update();
+        refreshTask();
+    });
+
 }
 
+function editModal(id) {
 
+    getTask(id).then(function (task) {
+        $('#editTask-name').val(task.name);
+        $('#editTaskModal').modal('show');
+
+        $('#editTask-btn').click(function () {
+            $('#editTaskModal').modal('hide');
+            task.name = $('#editTask-name').val();
+            task.update();
+            refreshTask();
+        });
+
+    })
+}
 

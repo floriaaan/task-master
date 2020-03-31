@@ -1,7 +1,7 @@
 class Member {
 
     constructor(name, role) {
-        this.id = 'member-' + localStorage.length;
+        this.id = '';
         this.name = name;
         this.role = role;
 
@@ -9,7 +9,21 @@ class Member {
     }
 
     save() {
-        localStorage.setItem(this.id, JSON.stringify(this));
+        base('members').create({
+
+            "fields": {
+                "name": this.name,
+                "role": this.role
+            }
+
+        }, function (err, record) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log(record.getId());
+
+        });
     }
 
     read() {
@@ -23,46 +37,79 @@ class Member {
     }
 
     update() {
-        //display a modal
-        //make modifications
-        localStorage.setItem(this.id, JSON.stringify(this));
+        base('members').replace([
+            {
+                "id": this.id,
+                "fields": {
+                    "name": this.name,
+                    "role": this.role
+                }
+            }
+        ], function (err, records) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            records.forEach(function (record) {
+                console.log(record.get('role'));
+            });
+        });
     }
 
     delete() {
-        //display a modal
-        localStorage.removeItem(this.id)
+        base('members').destroy([this.id], function (err, deletedRecords) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log('Deleted', deletedRecords.length, 'records');
+        });
     }
 
 
 }
 
-function deleteAllMembers() {
-
-    for (let i in localStorage) {
-        if (i.includes('member')) {
-            localStorage.removeItem(i);
-        }
-    }
-
-}
 
 function getMember(id) {
-    if(id.includes('member-')) {
-        return convertJsonToMember(JSON.parse(localStorage.getItem(id)))
-    } else {
-        return convertJsonToMember(JSON.parse(localStorage.getItem('member-' + id)));
-    }
+    return base('members').find(id).then(function () {
+
+        console.log('Retrieved', record.id);
+        let member = new Member(record.fields.name, record.fields.role)
+        member.id = id;
+        return member;
+    });
+
 
 }
 
 function putAllMembers() {
-    for (let member in localStorage) {
-        let object = JSON.parse(localStorage.getItem(member));
-        if (object.id != null && object.id.includes('member')) {
-            let t = convertJsonToMember(object);
-            t.read();
+    let memberList = [];
+    base('members').select({
+        // Selecting the first 3 records in Grid view:
+        maxRecords: 3,
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function (record) {
+            memberList.push(record);
+        });
+
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        for (let i = 0; i < memberList.length; i++) {
+            let member = new Member(memberList[i].fields.name, memberList[i].fields.role);
+            member.id = memberList[i].id;
+            member.read()
         }
 
-    }
+    });
+
+
 }
 
