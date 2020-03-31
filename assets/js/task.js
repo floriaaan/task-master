@@ -1,7 +1,7 @@
 class Task {
 
     constructor(name) {
-        this.id = 'task-' + localStorage.length;
+        this.id = 'task-';
         this.name = name; // Nom de la tâche
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
@@ -80,7 +80,7 @@ class Task {
     read() {
         let membersName = "";
 
-        if (this.members != null) {
+        /*if (this.members != null) {
             for (let m = 0; m < this.members.length; m++) {
                 membersName += getMember(this.members[m]).name;
                 if (m !== this.members.length - 1) {
@@ -88,7 +88,14 @@ class Task {
                 }
             }
         }
-        console.log(this);
+        //console.log(this);
+        }*/
+
+        let date = "";
+        if (this.dateFin !== undefined) {
+            date = this.dateFin;
+        }
+
         if (this.status === 0) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
@@ -147,7 +154,7 @@ class Task {
                 return;
             }
             console.log('Deleted', deletedRecords.length, 'records');
-            $('\'#' + this.id + '\'').remove();
+            refreshTask();
         });
     }
 
@@ -210,6 +217,7 @@ function fTime() {
         }
         setTimeout(fTime, 1000); /* rappel après 2 secondes = 2000 millisecondes */
     }
+}
 
 
 fTime();
@@ -353,4 +361,6 @@ function editModal(id) {
             task.update();
             refreshTask();
         });
-    }
+    })
+}
+
