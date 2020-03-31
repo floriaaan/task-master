@@ -91,13 +91,18 @@ class Task {
         //console.log(this);
         }*/
 
+        let date = "";
+        if (this.dateFin !== undefined) {
+            date = this.dateFin;
+        }
+
         if (this.status === 0) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
                             <span>${membersName}</span>
-                            <p class="lead">${this.dateFin}</p>
+                            <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
                         
                         <div class="">
@@ -112,7 +117,7 @@ class Task {
                         <div>
                             <p class="lead">${this.name}</p>
                             <span>${membersName}</span>
-                            <p class="lead">${this.dateFin}</p>
+                            <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
 
                         <div class="">
@@ -128,7 +133,7 @@ class Task {
                         <div>
                             <p class="lead">${this.name}</p>
                             <span>${membersName}</span>
-                            <p class="lead">${this.dateFin}</p>
+                            <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
                         
                         <div class="">
@@ -149,7 +154,7 @@ class Task {
                 return;
             }
             console.log('Deleted', deletedRecords.length, 'records');
-            $('\'#' + this.id + '\'').remove();
+            refreshTask();
         });
     }
 
