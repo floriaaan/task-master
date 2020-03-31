@@ -47,7 +47,12 @@ function deleteAllMembers() {
 }
 
 function getMember(id) {
-    return convertJsonToMember(JSON.parse(localStorage.getItem('member-' + id)))
+    if(id.includes('member-')) {
+        return convertJsonToMember(JSON.parse(localStorage.getItem(id)))
+    } else {
+        return convertJsonToMember(JSON.parse(localStorage.getItem('member-' + id)));
+    }
+
 }
 
 function putAllMembers() {
