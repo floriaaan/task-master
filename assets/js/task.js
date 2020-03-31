@@ -37,7 +37,9 @@ class Task {
                     "name": this.name,
                     "members": this.members,
                     "status": this.status,
-                    "archived": this.archived
+                    "archived": this.archived,
+                    "dateFin": this.dateFin,
+                    "rappel": this.heureRappel
                 }
             }
         ], function (err, record) {
@@ -59,7 +61,9 @@ class Task {
                     "name": this.name,
                     "members": this.members,
                     "status": this.status,
-                    "archived": this.archived
+                    "archived": this.archived,
+                    "dateFin": this.dateFin,
+                    "rappel": this.heureRappel
                 }
             }
         ], function (err, records) {
@@ -98,7 +102,8 @@ class Task {
                             <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
-                    </div>`);
+                    </div>
+                    <hr class="my-1 mx-4">`);
         } else if (this.status === 1) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
@@ -157,15 +162,19 @@ async function getTask(id) {
         task.members = record.fields.members;
         task.status = record.fields.status;
         task.archived = record.fields.archived;
+        task.dateFin = record.fields.dateFin;
+        task.heureRappel = record.fields.rappel;
         return task;
     });
 }
 
-function createTask(name){
-    //console.log(heureRappel);
+function createTask(name, date, rappel){
+
     if (name != null) {
         let t = new Task(name);
         //t.addUser();
+        t.addDateFin(date);
+        t.addHrappel(rappel);
         t.save();
         t.read();
         //console.log(this.dateFin)
@@ -229,6 +238,8 @@ function putAllTasks() {
             task.members = taskList[i].fields.members;
             task.status = taskList[i].fields.status;
             task.archived = taskList[i].fields.archived;
+            task.dateFin = taskList[i].fields.dateFin;
+            task.heureRappel = taskList[i].fields.rappel;
             task.read();
         }
 
@@ -262,6 +273,9 @@ function putArchivedTasks() {
             task.members = taskList[i].fields.members;
             task.status = taskList[i].fields.status;
             task.archived = taskList[i].fields.archived;
+            task.dateFin = taskList[i].fields.dateFin;
+            task.heureRappel = taskList[i].fields.rappel;
+
 
             task.read();
         }
