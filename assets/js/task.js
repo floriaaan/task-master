@@ -1,7 +1,7 @@
 class Task {
 
     constructor(name) {
-        this.id = 'task-';
+        this.id = 'task-' + localStorage.length;
         this.name = name; // Nom de la tâche
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
@@ -76,7 +76,7 @@ class Task {
     read() {
         let membersName = "";
 
-        /*if (this.members != null) {
+        if (this.members != null) {
             for (let m = 0; m < this.members.length; m++) {
                 membersName += getMember(this.members[m]).name;
                 if (m !== this.members.length - 1) {
@@ -84,9 +84,7 @@ class Task {
                 }
             }
         }
-        //console.log(this);
-        }*/
-
+        console.log(this);
         if (this.status === 0) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
@@ -184,21 +182,29 @@ function createTask(name,dateFin,heureRappel) {
 
 }
 
+//console.log(localStorage);
+
+function deleteAllTasks() {
+    for (let i in localStorage) {
+        if (i.includes('task')) {
+            localStorage.removeItem(i);
+        }
+    }
+}
 
 function fTime() {
     var d = new Date();
-    /*for (let i in localStorage) {
+    for (let i in localStorage) {
         if (i.includes('task')) {
             let task = JSON.parse(i)
-            console.log(task);
-            if(i.dateFin != null) {
-                if(d >= i.dateFindateFin  ){
+            //console.log(task);
+            if (i.dateFin != null) {
+                if (d >= i.dateFindateFin) {
                     alert("blablabla");
                     console.log(d);
                 }
             }
-        }*/
-
+        }
         setTimeout(fTime, 1000); /* rappel après 2 secondes = 2000 millisecondes */
     }
 
@@ -339,7 +345,4 @@ function editModal(id) {
             task.update();
             refreshTask();
         });
-
-    })
-}
-
+    }
