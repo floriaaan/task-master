@@ -21,7 +21,7 @@ function deleteAllAndClear() {
     $('#tasklist').html("");
 }
 
-function retrieveAllfromAirtable() {
+function retrieveAllfromAirtable(callableFunction) {
     let tasks = [];
     base('tasks').select({
         // Selecting the first 3 records in Grid view:
@@ -73,6 +73,8 @@ function retrieveAllfromAirtable() {
             member.id = 'member-' + members[k].id;
 
             member.save();
+
         }
     });
+    callableFunction()
 }

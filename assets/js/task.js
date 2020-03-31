@@ -61,7 +61,8 @@ class Task {
                             <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
-                    </div>`);
+                    </div>
+                    <hr class="my-1 mx-4">`);
         } else {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
@@ -75,7 +76,8 @@ class Task {
                             <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
                             <button class="btn btn-secondary mx-2" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
-                    </div>`);
+                    </div>
+                    <hr class="my-1 mx-4">`);
         }
     }
 
