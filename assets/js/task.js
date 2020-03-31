@@ -7,6 +7,7 @@ class Task {
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
         this.archived = 0;
+        this.fromAirtable = 0;
     }
 
     addMember(member) {
@@ -116,6 +117,8 @@ function putAllTasks() {
             }
         }
     }
+
+
 }
 
 function putArchivedTasks() {
@@ -172,15 +175,4 @@ function toggleArchived(id) {
 }
 
 
-$.ajax({
-    url: "https://api.airtable.com/v0/appR3t8mx4snnhfd6/tasks?maxRecords=3&view=Grid%20view",
-    type: "GET",
-    datatype: 'json',
-    headers: {"Authorization": "Bearer keywEghO0vQCyajkK"},
-    success: function (data) {
-        console.log(data);
-    },
-    error: function (data) {
-        console.log(data)
-    }
-});
+

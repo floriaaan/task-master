@@ -47,7 +47,7 @@ function deleteAllMembers() {
 }
 
 function getMember(id) {
-    return convertJsonToMember(JSON.parse(localStorage.getItem(id)))
+    return convertJsonToMember(JSON.parse(localStorage.getItem('member-' + id)))
 }
 
 function putAllMembers() {
@@ -60,3 +60,4 @@ function putAllMembers() {
 
     }
 }
+
