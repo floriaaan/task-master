@@ -18,7 +18,7 @@ class Member {
                 }
             }
         ]).then(function (record) {
-             localStorage.setItem('mem', record[0].id)
+            localStorage.setItem('mem', record[0].id)
         });
 
 
@@ -108,8 +108,6 @@ function putAllMembers() {
         }
 
     });
-
-
 
 
 }
