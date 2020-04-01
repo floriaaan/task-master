@@ -382,6 +382,11 @@ function recoverTask(id) {
         task.archived = 0;
         task.status = 0;
         task.update();
+        Swal.fire(
+            task.name + ' a bien été récupérée',
+            '',
+            'success'
+        );
         refreshTask();
     });
 }
