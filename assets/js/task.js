@@ -335,7 +335,8 @@ function searchInTasks(query) {
     }).eachPage(function page(records) {
         records.forEach(function (record) {
             if (record.fields.name !== undefined) {
-                if (record.fields.name.includes(query)) {
+                if (record.fields.name.toLowerCase().includes(query.toLowerCase())) {
+                    $('#tasklist').empty();
                     let t = new Task(record.fields.name);
                     t.read();
                 }
