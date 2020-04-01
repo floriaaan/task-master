@@ -143,6 +143,7 @@ class Task {
                             <p class="lead">${this.name}</p>
                             <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
+                        
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
                             <button class="btn btn-warning mx-2" onclick="recoverTask(\'${this.id}\')"><i class="fa fa-repeat"></i>&nbsp;&nbsp;Récupérer</button>
@@ -171,6 +172,7 @@ class Task {
             }
         });
     }
+
 }
 
 async function getTask(id) {
@@ -218,6 +220,8 @@ function fTime() {
         // This function (`page`) will get called for each page of records.
         records.forEach(function (record) {
             if (record.fields.dateFin !== undefined) {
+                //console.log('la valeur de la date est|' + (((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 )) );
+                //console.log('Le rappel est |' + record.fields.rappel  +'|');
                 if (((Date.parse(record.fields.dateFin) / 1000) / 60) - ((Date.parse(now) / 1000) / 60) == record.fields.rappel) {
                     alert('Vous avez une tache à effectuer :' + record.fields.name);
                 }
@@ -259,7 +263,6 @@ function putAllTasks() {
     });
 }
 
-
 function putArchivedTasks() {
     let taskList = [];
     base('tasks').select({
@@ -277,6 +280,7 @@ function putArchivedTasks() {
             console.error(err);
             return;
         }
+
         for (let i = 0; i < taskList.length; i++) {
             let task = new Task(taskList[i].fields.name);
             task.id = taskList[i].id;
@@ -285,6 +289,8 @@ function putArchivedTasks() {
             task.archived = taskList[i].fields.archived;
             task.dateFin = taskList[i].fields.dateFin;
             task.heureRappel = taskList[i].fields.rappel;
+
+
             task.read();
         }
     });
@@ -305,7 +311,6 @@ async function deleteModal(id) {
             )
         });
     });
-
 }
 
 async function archiveModal(id) {
@@ -328,15 +333,18 @@ async function archiveModal(id) {
 }
 
 function searchInTasks(query) {
-    for (let task in localStorage) {
-        let object = JSON.parse(localStorage.getItem(task));
-        if (object !== null && object.id.includes('task') && (object.name.toLowerCase().includes(query.toLowerCase())) && object.archived !== 1) {
-            let t = convertJsonToTask(object);
-            // console.log(object);
-            t.read();
-        }
-
-    }
+    base('tasks').select({
+        view: "Grid view"
+    }).eachPage(function page(records) {
+        records.forEach(function (record) {
+            if (record.fields.name !== undefined) {
+                if(record.fields.name.includes(query)) {
+                    let t = new Task(record.fields.name);
+                    t.read();
+                }
+                    }
+                });
+            });
 }
 
 function refreshTask() {
