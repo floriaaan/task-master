@@ -9,21 +9,19 @@ class Member {
     }
 
     save() {
-        base('members').create({
-
-            "fields": {
-                "name": this.name,
-                "role": this.role
+        base('members').create([
+            {
+                "fields": {
+                    "task": [],
+                    "name": this.name,
+                    "role": this.role
+                }
             }
-
-        }, function (err, record) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log(record.getId());
-
+        ]).then(function (record) {
+             localStorage.setItem('mem', record[0].id)
         });
+
+
     }
 
     read() {
@@ -71,10 +69,11 @@ class Member {
 
 
 function getMember(id) {
-    return base('members').find(id).then(function () {
+    console.log(id)
+    return base('members').find(id).then(function (record) {
 
         console.log('Retrieved', record.id);
-        let member = new Member(record.fields.name, record.fields.role)
+        let member = new Member(record.fields.name, record.fields.role);
         member.id = id;
         return member;
     });
@@ -109,6 +108,8 @@ function putAllMembers() {
         }
 
     });
+
+
 
 
 }

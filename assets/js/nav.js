@@ -15,7 +15,10 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                <a class="nav-link" href="index.html">Accueil</a>\n' +
     '            </li>\n' +
     '            <li class="nav-item">\n' +
-    '                <a class="nav-link" href="#">Lien</a>\n' +
+    '                <a class="nav-link" href="membre.html">Liste des membres</a>\n' +
+    '            </li>\n' +
+    '            <li class="nav-item">\n' +
+    '                <a class="nav-link" href="archive.html">Archived tasks</a>\n' +
     '            </li>\n' +
     '            <li class="nav-item dropdown">\n' +
     '                <a class="nav-link dropdown-toggle" id="auth" role="button" data-toggle="dropdown"\n' +
@@ -26,12 +29,6 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                    <div class="dropdown-item" id="sign-in" onclick="$(\'#login\').modal(\'show\')">Se connecter</div>\n' +
     '                    <div class="dropdown-item d-none" id="sign-out">Déconnexion</pre></div>' +
     '                </div>\n' +
-    '            </li>\n' +
-    '            <li class="nav-item">\n' +
-    '                <a class="nav-link" href="membre.html">Liste des membres</a>\n' +
-    '            </li>\n' +
-    '            <li class="nav-item">\n' +
-    '                <a class="nav-link" href="archive.html">Archived tasks</a>\n' +
     '            </li>\n' +
     '        </ul>\n' +
     '        <div class="form-inline has-search my-2 my-lg-0">\n' +

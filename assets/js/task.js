@@ -8,11 +8,12 @@ class Task {
         this.archived = 0;
         this.dateFin = ""; //Date de fin
         this.heureRappel = ""; //heure du rappel
-        this.fromAirtable = 0;
+        this.fid = '';
     }
 
     addMember(member) {
         member.save();
+        member.id = localStorage.getItem('mem');
         this.members.push(member.id);
     }
 
@@ -28,7 +29,6 @@ class Task {
         if (userLoggged != null)
             this.addMember(new Member(userLoggged.displayName, 'owner'));
     }
-
 
 
     save() {
@@ -49,8 +49,9 @@ class Task {
                 console.error(err);
                 return;
             }
-                console.log(record.getId());
-                this.id = record.getId();
+            console.log(record[0].id);
+            this.id = record[0].id;
+
         });
     }
 
@@ -79,18 +80,7 @@ class Task {
     }
 
     read() {
-        let membersName = "";
-
-        /*if (this.members != null) {
-            for (let m = 0; m < this.members.length; m++) {
-                membersName += getMember(this.members[m]).name;
-                if (m !== this.members.length - 1) {
-                    membersName += ', ';
-                }
-            }
-        }
-        //console.log(this);
-        }*/
+        let memberList = "";
 
         let date = "";
         if (this.dateFin !== undefined) {
@@ -102,11 +92,12 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${membersName}</span>
-                            <p class="lead">${this.dateFin}</p>
+                            <span>${memberList}</span>
+                            <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
                         
                         <div class="">
+                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\\'${this.id}\\')">Editer</button>
                             <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
@@ -117,12 +108,13 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${membersName}</span>
-                            <p class="lead">${this.dateFin}</p>
+                            <span>${memberList}</span>
+                            <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
 
                         <div class="">
                             <span id="enCours" class="badge badge-danger mx-2">En cours</span>
+                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')">Editer</button>
                             <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
@@ -133,18 +125,20 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${membersName}</span>
-                            <p class="lead">${this.dateFin}</p>
+                            <span>${memberList}</span>
+                            <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
                         
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
+                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')">Editer</button>
                             <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
                             <button class="btn btn-secondary mx-2" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
         }
+
 
     }
 
@@ -167,6 +161,7 @@ async function getTask(id) {
         console.log('Retrieved', record.id);
         let task = new Task(record.fields.name);
         task.id = id;
+        task.fid = record.fields.id;
         task.members = record.fields.members;
         task.status = record.fields.status;
         task.archived = record.fields.archived;
@@ -176,7 +171,7 @@ async function getTask(id) {
     });
 }
 
-function createTask(name, date, rappel){
+function createTask(name, date, rappel) {
     var date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
@@ -193,15 +188,6 @@ function createTask(name, date, rappel){
 
 }
 
-//console.log(localStorage);
-
-function deleteAllTasks() {
-    for (let i in localStorage) {
-        if (i.includes('task')) {
-            localStorage.removeItem(i);
-        }
-    }
-}
 
 function fTime() {
     var now = moment().format("YYYY-MM-DD h:mm");
@@ -211,15 +197,15 @@ function fTime() {
         // This function (`page`) will get called for each page of records.
         records.forEach(function (record) {
             if (record.fields.dateFin !== undefined) {
-                console.log('la valeur de la date est|' + (((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 )) );
-                console.log('Le rappel est |' + record.fields.rappel  +'|');
-                if(((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 ) == record.fields.rappel  ){
-                    alert('Vous avez une tache à effectuer :'+record.fields.name);
+                //console.log('la valeur de la date est|' + (((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 )) );
+                //console.log('Le rappel est |' + record.fields.rappel  +'|');
+                if (((Date.parse(record.fields.dateFin) / 1000) / 60) - ((Date.parse(now) / 1000) / 60) == record.fields.rappel) {
+                    alert('Vous avez une tache à effectuer :' + record.fields.name);
                 }
             }
         });
     })
-        setTimeout(fTime, 60000); /* rappel après 2 secondes = 2000 millisecondes */
+    setTimeout(fTime, 60000); /* rappel après 2 secondes = 2000 millisecondes */
 
 }
 
@@ -367,5 +353,41 @@ function editModal(id) {
             refreshTask();
         });
     })
+}
+
+async function getMemberfromTask(task) {
+    let memberList = [];
+    base('members').select({
+        // Selecting the first 3 records in Grid view:
+        maxRecords: 3,
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
+
+        records.forEach(function (record) {
+            if (record.fields.task.includes(task)) {
+
+                memberList.push(record);
+            }
+        });
+
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        let names = "";
+        for (let i = 0; i < memberList.length; i++) {
+            names += (memberList[i].fields.name);
+            if (i !== memberList.length - 1) {
+                names += ', ';
+            }
+        }
+
+        return names;
+
+    });
 }
 
