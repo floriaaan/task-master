@@ -164,12 +164,9 @@ class Task {
                 return;
             }
             console.log('Deleted', deletedRecords.length, 'records');
-            if (window.location.href.includes('archive')) {
-                $('#tasklist').empty();
-                putArchivedTasks();
-            } else {
-                refreshTask();
-            }
+
+            refreshTask();
+
         });
     }
 
@@ -338,18 +335,22 @@ function searchInTasks(query) {
     }).eachPage(function page(records) {
         records.forEach(function (record) {
             if (record.fields.name !== undefined) {
-                if(record.fields.name.includes(query)) {
+                if (record.fields.name.includes(query)) {
                     let t = new Task(record.fields.name);
                     t.read();
                 }
-                    }
-                });
-            });
+            }
+        });
+    });
 }
 
 function refreshTask() {
     $('#tasklist').empty();
-    putAllTasks();
+    if (window.location.href.includes('archive')) {
+        putArchivedTasks();
+    } else {
+        putAllTasks();
+    }
 }
 
 async function toggleCompleted(id) {
