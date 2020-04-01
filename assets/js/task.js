@@ -81,6 +81,7 @@ class Task {
 
     read() {
         let memberList = "";
+
         let date = "";
         if (this.dateFin !== undefined) {
             date = this.dateFin;
@@ -143,6 +144,7 @@ class Task {
                             <p class="lead">${this.name}</p>
                             <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
+                        
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
                             <button class="btn btn-warning mx-2" disabled><i class="fa fa-repeat"></i>&nbsp;&nbsp;Récupérer</button>
@@ -163,6 +165,7 @@ class Task {
             refreshTask();
         });
     }
+
 }
 
 async function getTask(id) {
@@ -181,8 +184,8 @@ async function getTask(id) {
     });
 }
 
-function createTask(name, date, rappel) {
-    var date = moment(date).format('YYYY-MM-DD h:mm');
+function createTask(name, date, rappel){
+    date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
         //t.addUser();
@@ -190,8 +193,10 @@ function createTask(name, date, rappel) {
         t.addHrappel(rappel);
         t.save();
         t.read();
+        //console.log(this.dateFin)
     }
     $('#taskName').val("");
+    // console.log($('#taskName').val(""))
     $('#addTaskModal').modal('hide');
     Swal.fire(
         t.name + ' a bien été créée',
@@ -210,6 +215,8 @@ function fTime() {
         // This function (`page`) will get called for each page of records.
         records.forEach(function (record) {
             if (record.fields.dateFin !== undefined) {
+                //console.log('la valeur de la date est|' + (((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 )) );
+                //console.log('Le rappel est |' + record.fields.rappel  +'|');
                 if (((Date.parse(record.fields.dateFin) / 1000) / 60) - ((Date.parse(now) / 1000) / 60) == record.fields.rappel) {
                     alert('Vous avez une tache à effectuer :' + record.fields.name);
                 }
@@ -251,7 +258,6 @@ function putAllTasks() {
     });
 }
 
-
 function putArchivedTasks() {
     let taskList = [];
     base('tasks').select({
@@ -261,14 +267,14 @@ function putArchivedTasks() {
         records.forEach(function (record) {
             if (record.fields.archived === 1 && record.fields.archived !== undefined) {
                 taskList.push(record);
-            }
-        });
+        };
         fetchNextPage();
     }, function done(err) {
         if (err) {
             console.error(err);
             return;
         }
+
         for (let i = 0; i < taskList.length; i++) {
             let task = new Task(taskList[i].fields.name);
             task.id = taskList[i].id;
@@ -277,9 +283,12 @@ function putArchivedTasks() {
             task.archived = taskList[i].fields.archived;
             task.dateFin = taskList[i].fields.dateFin;
             task.heureRappel = taskList[i].fields.rappel;
+
+
             task.read();
         }
     });
+})
 }
 
 async function deleteModal(id) {
@@ -297,7 +306,6 @@ async function deleteModal(id) {
             )
         });
     });
-
 }
 
 async function archiveModal(id) {
@@ -320,15 +328,18 @@ async function archiveModal(id) {
 }
 
 function searchInTasks(query) {
-    for (let task in localStorage) {
-        let object = JSON.parse(localStorage.getItem(task));
-        if (object !== null && object.id.includes('task') && (object.name.toLowerCase().includes(query.toLowerCase())) && object.archived !== 1) {
-            let t = convertJsonToTask(object);
-            // console.log(object);
-            t.read();
-        }
-
-    }
+    base('tasks').select({
+        view: "Grid view"
+    }).eachPage(function page(records) {
+        records.forEach(function (record) {
+            if (record.fields.name !== undefined) {
+                if(record.fields.name.includes(query)) {
+                    let t = new Task(record.fields.name);
+                    t.read();
+                }
+                    }
+                });
+            });
 }
 
 function refreshTask() {
