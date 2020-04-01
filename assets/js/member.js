@@ -32,6 +32,9 @@ class Member {
                             <p class="lead">${this.role}</p>
 
              </div>`);
+        setTimeout(function () {
+            $('.task').css('opacity', 1);
+        }, 200);
     }
 
     update() {
