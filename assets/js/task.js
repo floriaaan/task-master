@@ -81,7 +81,6 @@ class Task {
 
     read() {
         let memberList = "";
-
         let date = "";
         if (this.dateFin !== undefined) {
             date = this.dateFin;
@@ -142,10 +141,8 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${membersName}</span>
                             <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
-                        
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
                             <button class="btn btn-warning mx-2" disabled><i class="fa fa-repeat"></i>&nbsp;&nbsp;Récupérer</button>
@@ -154,8 +151,6 @@ class Task {
                     </div>
                     <hr class="my-1 mx-4">`);
         }
-
-
     }
 
     delete() {
@@ -168,7 +163,6 @@ class Task {
             refreshTask();
         });
     }
-
 }
 
 async function getTask(id) {
@@ -196,10 +190,8 @@ function createTask(name, date, rappel) {
         t.addHrappel(rappel);
         t.save();
         t.read();
-        //console.log(this.dateFin)
     }
     $('#taskName').val("");
-    // console.log($('#taskName').val(""))
     $('#addTaskModal').modal('hide');
 
 }
@@ -213,14 +205,12 @@ function fTime() {
         // This function (`page`) will get called for each page of records.
         records.forEach(function (record) {
             if (record.fields.dateFin !== undefined) {
-                //console.log('la valeur de la date est|' + (((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 )) );
-                //console.log('Le rappel est |' + record.fields.rappel  +'|');
                 if (((Date.parse(record.fields.dateFin) / 1000) / 60) - ((Date.parse(now) / 1000) / 60) == record.fields.rappel) {
                     alert('Vous avez une tache à effectuer :' + record.fields.name);
                 }
             }
         });
-    })
+    });
     setTimeout(fTime, 60000); /* rappel après 2 secondes = 2000 millisecondes */
 
 }
@@ -256,25 +246,24 @@ function putAllTasks() {
     });
 }
 
+
 function putArchivedTasks() {
     let taskList = [];
     base('tasks').select({
+        // Selecting the first 3 records in Grid view:
         view: "Grid view"
-    }).eachPage(function page(records) {
-        // This function (`page`) will get called for each page of records.
-
+    }).eachPage(function page(records, fetchNextPage) {
         records.forEach(function (record) {
-            if (record.fields.archived === 1 && record.fields.archived !==undefined)
+            if (record.fields.archived === 1 && record.fields.archived !== undefined) {
                 taskList.push(record);
+            }
         });
-
-
+        fetchNextPage();
     }, function done(err) {
         if (err) {
             console.error(err);
             return;
         }
-
         for (let i = 0; i < taskList.length; i++) {
             let task = new Task(taskList[i].fields.name);
             task.id = taskList[i].id;
@@ -283,12 +272,9 @@ function putArchivedTasks() {
             task.archived = taskList[i].fields.archived;
             task.dateFin = taskList[i].fields.dateFin;
             task.heureRappel = taskList[i].fields.rappel;
-
-
             task.read();
         }
     });
-
 }
 
 async function deleteModal(id) {
@@ -320,7 +306,7 @@ function searchInTasks(query) {
         let object = JSON.parse(localStorage.getItem(task));
         if (object !== null && object.id.includes('task') && (object.name.toLowerCase().includes(query.toLowerCase())) && object.archived !== 1) {
             let t = convertJsonToTask(object);
-            console.log(object)
+            // console.log(object);
             t.read();
         }
 
