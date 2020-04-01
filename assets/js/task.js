@@ -127,7 +127,7 @@ class Task {
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
-        } else {
+        } else if (this.status === 2 && !this.archived) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
@@ -140,6 +140,22 @@ class Task {
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
                             <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
                             <button class="btn btn-secondary mx-2" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
+                        </div>
+                    </div>
+                    <hr class="my-1 mx-4">`);
+        } else if (this.status === 2 && this.archived === 1) {
+            $('#tasklist').append(
+                `<div class="row justify-content-between task p-2" id="${this.id}">
+                        <div>
+                            <p class="lead">${this.name}</p>
+                            <span>${membersName}</span>
+                            <span class="badge badge-secondary mx-2">${date}</span>
+                        </div>
+                        
+                        <div class="">
+                            <span id="finie" class="badge badge-success mx-2">Finie</span>
+                            <button class="btn btn-warning mx-2" disabled><i class="fa fa-repeat"></i>&nbsp;&nbsp;Récupérer</button>
+                            <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
@@ -210,7 +226,6 @@ function fTime() {
         setTimeout(fTime, 1000); /* rappel après 2 secondes = 2000 millisecondes */
     }
 
-
 fTime();
 
 function putAllTasks() {
@@ -219,18 +234,16 @@ function putAllTasks() {
         // Selecting the first 3 records in Grid view:
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
-
         records.forEach(function (record) {
-            taskList.push(record);
+            if (record.fields.archived !== 1)
+                taskList.push(record);
         });
-
         fetchNextPage();
     }, function done(err) {
         if (err) {
             console.error(err);
             return;
         }
-
         for (let i = 0; i < taskList.length; i++) {
             let task = new Task(taskList[i].fields.name);
             task.id = taskList[i].id;
@@ -241,9 +254,7 @@ function putAllTasks() {
             task.heureRappel = taskList[i].fields.rappel;
             task.read();
         }
-
     });
-
 }
 
 function putArchivedTasks() {
@@ -254,9 +265,8 @@ function putArchivedTasks() {
         // This function (`page`) will get called for each page of records.
 
         records.forEach(function (record) {
-            if (record.fields.archived !== undefined && record.fields.archived) {
+            if (record.fields.archived === 1 && record.fields.archived !==undefined)
                 taskList.push(record);
-            }
         });
 
 
@@ -341,7 +351,6 @@ function startTask(id) {
 }
 
 function editModal(id) {
-
     getTask(id).then(function (task) {
         $('#editTask-name').val(task.name);
         $('#editTaskModal').modal('show');
@@ -352,7 +361,6 @@ function editModal(id) {
             task.update();
             refreshTask();
         });
-
     })
 }
 

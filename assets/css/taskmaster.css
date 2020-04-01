@@ -17,7 +17,11 @@
 }
 
 .has-search .form-control-feedback {
-    position: fixed;
+    position: absolute;
     width: 2.375rem;
     text-align: center;
+}
+
+.cur-pointer{
+    cursor: pointer!important;
 }

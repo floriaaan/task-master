@@ -17,7 +17,7 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '            <li class="nav-item">\n' +
     '                <a class="nav-link" href="#">Lien</a>\n' +
     '            </li>\n' +
-    '            <li class="nav-item dropdown">\n' +
+    '            <li class="nav-item dropdown cur-pointer">\n' +
     '                <a class="nav-link dropdown-toggle" id="auth" role="button" data-toggle="dropdown"\n' +
     '                   aria-haspopup="true" aria-expanded="false">\n' +
     '                    Authentification\n' +
