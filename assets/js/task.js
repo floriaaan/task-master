@@ -353,6 +353,7 @@ function startTask(id) {
 function editModal(id) {
     getTask(id).then(function (task) {
         $('#editTask-name').val(task.name);
+        $('#socialShare').attr('href', 'https://twitter.com/intent/tweet?text=Ma tâche est de : '+ task.name + ' sur ' + window.location.href)
         $('#editTaskModal').modal('show');
 
         $('#editTask-btn').click(function () {
