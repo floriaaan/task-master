@@ -402,7 +402,7 @@ function editModal(id) {
     getTask(id).then(function (task) {
         $('#editTask-name').val(task.name);
         $('#editTask-title').html(task.name);
-        $('#editTask-Date').val(task.dateFin);
+        $('#editTask-Date').val(moment(task.dateFin).format('YYYY-MM-DD\Thh:mm'));
         $('#editTask-Rappel').val(task.heureRappel);
         $('#socialShare').attr('href', 'https://twitter.com/intent/tweet?text=Ma tâche est de : ' + task.name + ' sur ' + window.location.href)
         $('#editTaskModal').modal('show');
@@ -410,7 +410,7 @@ function editModal(id) {
         $('#editTask-btn').click(function () {
             let date = $('#editTask-Date').val();
             let rappel = $('#editTask-Rappel').val();
-            date = moment(date).format('YYYY-MM-DD h:mm');
+            date = moment(date).format('YYYY-MM-DD hh:mm');
 
             $('#editTaskModal').modal('hide');
             task.dateFin = date;
