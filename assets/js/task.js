@@ -96,7 +96,7 @@ class Task {
                         </div>
                         
                         <div class="">
-                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')">Editer</button>
+                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
@@ -113,7 +113,7 @@ class Task {
 
                         <div class="">
                             <span id="enCours" class="badge badge-danger mx-2">En cours</span>
-                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')">Editer</button>
+                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button class="btn btn-success mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
@@ -130,7 +130,7 @@ class Task {
                         
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')">Editer</button>
+                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button class="btn btn-warning mx-2" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
                             <button class="btn btn-secondary mx-2" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
@@ -342,7 +342,7 @@ async function toggleCompleted(id) {
         (task.status === 2) ? task.status = 1 : task.status = 2;
         task.update();
         refreshTask();
-        if(task.status === 2) {
+        if (task.status === 2) {
             Swal.fire(
                 task.name + ' a bien été terminée',
                 '',
@@ -376,7 +376,7 @@ function startTask(id) {
 function editModal(id) {
     getTask(id).then(function (task) {
         $('#editTask-name').val(task.name);
-        $('#socialShare').attr('href', 'https://twitter.com/intent/tweet?text=Ma tâche est de : '+ task.name + ' sur ' + window.location.href)
+        $('#socialShare').attr('href', 'https://twitter.com/intent/tweet?text=Ma tâche est de : ' + task.name + ' sur ' + window.location.href)
         $('#editTaskModal').modal('show');
 
         $('#editTask-btn').click(function () {

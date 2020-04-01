@@ -15,11 +15,11 @@ $('#body').append('<div class="modal fade" id="addTaskModal" tabindex="-1" role=
     '            <label for="taskDate">Doit être fait pour le </label>\n' +
     '            <input type="datetime-local" class="form-control" id="taskDate">\n' +
     '                 <label for="taskDate">Temps de rappel </label>\n' +
-    '                 <select class="form-control" name="timeSelect" id="taskRappel"> '+
-    '                 <option value="0">--selectionner le temps avant le rappel--</option>'+
-    '                 <option value="5">5 minutes</option>'+
-    '                 <option value="10">10 minutes</option>'+
-    '                 <option value="15">15 minutes</option>'+         
+    '                 <select class="form-control" name="timeSelect" id="taskRappel"> ' +
+    '                 <option value="0">--selectionner le temps avant le rappel--</option>' +
+    '                 <option value="5">5 minutes</option>' +
+    '                 <option value="10">10 minutes</option>' +
+    '                 <option value="15">15 minutes</option>' +
     '            </select>' +
     '         </div>\n' +
     '      </div>\n' +
@@ -50,9 +50,7 @@ $('#body').append('<div class="modal fade" id="editTaskModal" tabindex="-1" role
     '      <div class="modal-footer">\n' +
     '        <div class="row justify-content-between">' +
     '            <div>\n' +
-    '                <a href="" class="btn btn-light" id="socialShare">Partager sur Twitter</a>' +
-    '            </div>\n' +
-    '            <div>\n' +
+    '                <a href="" class="btn btn-light" id="socialShare"><i class="fa fa-twitter-square color-twitter"></i>&nbsp;&nbsp;Partager sur Twitter</a>' +
     '                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
     '                <button type="button" class="btn btn-primary" id="editTask-btn">Editer une tâche</button>\n' +
     '            </div>\n' +

@@ -15,10 +15,10 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                <a class="nav-link" href="index.html">Accueil</a>\n' +
     '            </li>\n' +
     '            <li class="nav-item">\n' +
-    '                <a class="nav-link" href="membre.html">Liste des membres</a>\n' +
+    '                <a class="nav-link" href="membre.html">Membres</a>\n' +
     '            </li>\n' +
     '            <li class="nav-item">\n' +
-    '                <a class="nav-link" href="archive.html">Archived tasks</a>\n' +
+    '                <a class="nav-link" href="archive.html">Tâches archivées</a>\n' +
     '            </li>\n' +
     '            <li class="nav-item dropdown cur-pointer">\n' +
     '                <a class="nav-link dropdown-toggle" id="auth" role="button" data-toggle="dropdown"\n' +

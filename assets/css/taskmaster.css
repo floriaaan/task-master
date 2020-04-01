@@ -7,8 +7,12 @@
     border-radius: .3rem;
 }
 
-.color-white{
+.color-white {
     color: white;
+}
+
+.color-twitter {
+    color: rgba(29, 161, 242, 1.00);
 }
 
 /* Search bar */
@@ -22,6 +26,6 @@
     text-align: center;
 }
 
-.cur-pointer{
-    cursor: pointer!important;
+.cur-pointer {
+    cursor: pointer !important;
 }
