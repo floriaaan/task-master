@@ -21,3 +21,7 @@
     width: 2.375rem;
     text-align: center;
 }
+
+.cur-pointer{
+    cursor: pointer!important;
+}
