@@ -147,7 +147,7 @@ class Task {
                         
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-warning mx-2" disabled><i class="fa fa-repeat"></i>&nbsp;&nbsp;Récupérer</button>
+                            <button class="btn btn-warning mx-2" onclick="recoverTask(\'${this.id}\')"><i class="fa fa-repeat"></i>&nbsp;&nbsp;Récupérer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
@@ -370,6 +370,15 @@ async function toggleCompleted(id) {
     });
 }
 
+function recoverTask(id) {
+    getTask(id).then(function (task) {
+        task.archived = 0;
+        task.status = 0;
+        task.update();
+        refreshTask();
+    });
+}
+
 function startTask(id) {
     getTask(id).then(function (task) {
         task.status = 1;
@@ -378,10 +387,9 @@ function startTask(id) {
             task.name + ' est commencée',
             '',
             'success'
-        )
+        );
         refreshTask();
     });
-
 }
 
 function editModal(id) {
