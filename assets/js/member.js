@@ -9,19 +9,7 @@ class Member {
     }
 
     save() {
-        base('members').create([
-            {
-                "fields": {
-                    "task": [],
-                    "name": this.name,
-                    "role": this.role
-                }
-            }
-        ]).then(function (record) {
-            localStorage.setItem('mem', record[0].id)
-        });
-
-
+        localStorage.setItem(this.id, JSON.stringify(this));
     }
 
     read() {
@@ -30,15 +18,11 @@ class Member {
                             <p class="lead">${this.id}</p>
                             <p class="lead">${this.name}</p>
                             <p class="lead">${this.role}</p>
-
              </div>`);
-        setTimeout(function () {
-            $('.task').css('opacity', 1);
-        }, 200);
     }
 
     update() {
-        base('members').replace([
+        base('members').update([
             {
                 "id": this.id,
                 "fields": {
@@ -46,25 +30,29 @@ class Member {
                     "role": this.role
                 }
             }
-        ], function (err, records) {
+        ], function (err, record) {
             if (err) {
                 console.error(err);
                 return;
             }
-            records.forEach(function (record) {
-                console.log(record.get('role'));
-            });
+
+            console.log('Updated', record.fields.name);
+            localStorage.setItem(this.id, JSON.stringify(this));
         });
+
+
     }
 
     delete() {
-        base('members').destroy([this.id], function (err, deletedRecords) {
+        base('members').destroy([this.id], function(err, deletedRecords) {
             if (err) {
                 console.error(err);
                 return;
             }
             console.log('Deleted', deletedRecords.length, 'records');
+            localStorage.removeItem(this.id);
         });
+
     }
 
 
@@ -72,46 +60,41 @@ class Member {
 
 
 function getMember(id) {
-    console.log(id)
-    return base('members').find(id).then(function (record) {
-
-        console.log('Retrieved', record.id);
-        let member = new Member(record.fields.name, record.fields.role);
-        member.id = id;
-        return member;
-    });
-
-
+    return convertJsonToMember(JSON.parse(localStorage.getItem(id)))
 }
 
 function putAllMembers() {
+    for(let json in localStorage) {
+        let object = JSON.parse(localStorage.getItem(json));
+
+        console.log(object)
+
+        if (object != null && object['id'] != null && object.id.includes('member')) {
+            let m = convertJsonToMember(object);
+            console.log(m)
+            m.read();
+        }
+
+    }
+}
+
+async function init() {
     let memberList = [];
     base('members').select({
         // Selecting the first 3 records in Grid view:
-        maxRecords: 3,
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
-        // This function (`page`) will get called for each page of records.
-
         records.forEach(function (record) {
             memberList.push(record);
         });
-
         fetchNextPage();
-
-    }, function done(err) {
-        if (err) {
-            console.error(err);
-            return;
-        }
+    }).then(function() {
+        console.log(memberList);
         for (let i = 0; i < memberList.length; i++) {
-            let member = new Member(memberList[i].fields.name, memberList[i].fields.role);
+            let member = new Member(memberList[i].fields.name, memberList[i].role);
             member.id = memberList[i].id;
-            member.read()
+            member.save();
         }
-
     });
 
-
 }
-
