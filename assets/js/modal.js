@@ -48,8 +48,15 @@ $('#body').append('<div class="modal fade" id="editTaskModal" tabindex="-1" role
     '         </div>\n' +
     '      </div>\n' +
     '      <div class="modal-footer">\n' +
-    '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
-    '        <button type="button" class="btn btn-primary" id="editTask-btn">Editer une tâche</button>\n' +
+    '        <div class="row justify-content-between">' +
+    '            <div>\n' +
+    '                <a href="" class="btn btn-light" id="socialShare">Partager sur Twitter</a>' +
+    '            </div>\n' +
+    '            <div>\n' +
+    '                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
+    '                <button type="button" class="btn btn-primary" id="editTask-btn">Editer une tâche</button>\n' +
+    '            </div>\n' +
+    '       </div>\n' +
     '      </div>\n' +
     '    </div>\n' +
     '  </div>\n' +
