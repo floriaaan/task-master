@@ -97,7 +97,7 @@ class Task {
                         </div>
                         
                         <div class="">
-                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\\'${this.id}\\')">Editer</button>
+                            <button class="btn btn-outline-primary mx-2" onclick="editModal(\'${this.id}\')">Editer</button>
                             <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
                             <button class="btn btn-danger mx-2" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
