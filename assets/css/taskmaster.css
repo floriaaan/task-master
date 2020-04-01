@@ -1,5 +1,7 @@
 .task {
-
+    opacity: 0;
+    transition: opacity 0.5s;
+    -webkit-transition: opacity 2s; /* Safari */
 }
 
 .task:hover {
@@ -25,3 +27,4 @@
 .cur-pointer{
     cursor: pointer!important;
 }
+

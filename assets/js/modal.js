@@ -45,6 +45,15 @@ $('#body').append('<div class="modal fade" id="editTaskModal" tabindex="-1" role
     '        <div class="form-group">\n' +
     '            <label for="taskName">Nom de la tâche</label>\n' +
     '            <input type="text" class="form-control" id="editTask-name">\n' +
+    '            <label for="editTask-Date">Doit être fait pour le </label>\n' +
+    '            <input type="datetime-local" class="form-control" id="editTask-Date">\n' +
+    '                 <label for="editTask-Rappel">Temps de rappel </label>\n' +
+    '                 <select class="form-control" name="timeSelect" id="editTask-Rappel"> '+
+    '                 <option value="0">--selectionner le temps avant le rappel--</option>'+
+    '                 <option value="5">5 minutes</option>'+
+    '                 <option value="10">10 minutes</option>'+
+    '                 <option value="15">15 minutes</option>'+
+    '            </select>' +
     '         </div>\n' +
     '      </div>\n' +
     '      <div class="modal-footer">\n' +
@@ -88,18 +97,7 @@ $('#body').append('<div class="modal fade" id="deleteTaskModal" tabindex="-1" ro
 $('#body').append('<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-hidden="true">\n' +
     '  <div class="modal-dialog" role="document">\n' +
     '    <div class="modal-content">\n' +
-    '      <div class="modal-header">\n' +
-    '        <h5 class="modal-title">Se connecter ou Créer un compte</h5>\n' +
-    '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
-    '          <span aria-hidden="true">&times;</span>\n' +
-    '        </button>\n' +
-    '      </div>\n' +
-    '      <div class="modal-body">\n' +
-    '           <div id="firebaseui-auth-container"></div>' +
-    '      </div>\n' +
-    '      <div class="modal-footer">\n' +
-    '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>\n' +
-    '      </div>\n' +
+    '       <div id="firebaseui-auth-container" class="w-100"></div>' +
     '    </div>\n' +
     '  </div>\n' +
     '</div>');

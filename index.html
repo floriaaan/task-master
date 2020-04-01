@@ -81,10 +81,10 @@
                 onclick="if(!$('#addtask-btn').hasClass('disabled')){$('#addTaskModal').modal('show');}"
                 id="addtask-btn"><i class="fa fa-plus"></i>&nbsp;&nbsp;Ajouter une tâche
         </button>
-        <button class="btn btn-danger mx-2 w-25" id="deleteAllLocalStorage-btn"
+        <!--<button class="btn btn-danger mx-2 w-25" id="deleteAllLocalStorage-btn"
                 onclick="if(!$('#deleteAllLocalStorage-btn').hasClass('disabled')){deleteAllAndClear();}"><i
                 class="fa fa-trash"></i>&nbsp;&nbsp;Tout supprimer
-        </button>
+        </button>-->
     </div>
 </div>
 
@@ -95,7 +95,9 @@
     test.addMember(new Member('Ophélie', 'user'));
     test.status = 1;*/
 
-             putAllTasks();
+    putAllTasks();
+
+
 
     //console.log(localStorage);
 </script>

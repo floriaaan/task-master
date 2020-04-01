@@ -151,6 +151,9 @@ class Task {
                     </div>
                     <hr class="my-1 mx-4">`);
         }
+        setTimeout(function () {
+            $('.task').css('opacity', 1);
+        }, 200);
     }
 
     delete() {
@@ -160,7 +163,12 @@ class Task {
                 return;
             }
             console.log('Deleted', deletedRecords.length, 'records');
-            refreshTask();
+            if (window.location.href.includes('archive')) {
+                $('#tasklist').empty();
+                putArchivedTasks();
+            } else {
+                refreshTask();
+            }
         });
     }
 }
@@ -182,7 +190,7 @@ async function getTask(id) {
 }
 
 function createTask(name, date, rappel) {
-    var date = moment(date).format('YYYY-MM-DD h:mm');
+    date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
         //t.addUser();
@@ -342,7 +350,7 @@ async function toggleCompleted(id) {
         (task.status === 2) ? task.status = 1 : task.status = 2;
         task.update();
         refreshTask();
-        if(task.status === 2) {
+        if (task.status === 2) {
             Swal.fire(
                 task.name + ' a bien été terminée',
                 '',
@@ -376,11 +384,20 @@ function startTask(id) {
 function editModal(id) {
     getTask(id).then(function (task) {
         $('#editTask-name').val(task.name);
-        $('#socialShare').attr('href', 'https://twitter.com/intent/tweet?text=Ma tâche est de : '+ task.name + ' sur ' + window.location.href)
+        $('#editTask-title').html(task.name);
+        $('#editTask-Date').val(task.dateFin);
+        $('#editTask-Rappel').val(task.heureRappel);
+        $('#socialShare').attr('href', 'https://twitter.com/intent/tweet?text=Ma tâche est de : ' + task.name + ' sur ' + window.location.href)
         $('#editTaskModal').modal('show');
 
         $('#editTask-btn').click(function () {
+            let date = $('#editTask-Date').val();
+            let rappel = $('#editTask-Rappel').val();
+            date = moment(date).format('YYYY-MM-DD h:mm');
+
             $('#editTaskModal').modal('hide');
+            task.dateFin = date;
+            task.heureRappel = rappel;
             task.name = $('#editTask-name').val();
             task.update();
             Swal.fire(
