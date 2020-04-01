@@ -19,6 +19,9 @@ class Member {
                             <p class="lead">${this.name}</p>
                             <p class="lead">${this.role}</p>
              </div>`);
+        setTimeout(function () {
+            $('.task').css('opacity', 1);
+        }, 200);
     }
 
     update() {
@@ -67,34 +70,13 @@ function putAllMembers() {
     for(let json in localStorage) {
         let object = JSON.parse(localStorage.getItem(json));
 
-        console.log(object)
 
-        if (object != null && object['id'] != null && object.id.includes('member')) {
+        if (object != null && object.id != null) {
             let m = convertJsonToMember(object);
-            console.log(m)
+
             m.read();
         }
 
     }
 }
 
-async function init() {
-    let memberList = [];
-    base('members').select({
-        // Selecting the first 3 records in Grid view:
-        view: "Grid view"
-    }).eachPage(function page(records, fetchNextPage) {
-        records.forEach(function (record) {
-            memberList.push(record);
-        });
-        fetchNextPage();
-    }).then(function() {
-        console.log(memberList);
-        for (let i = 0; i < memberList.length; i++) {
-            let member = new Member(memberList[i].fields.name, memberList[i].role);
-            member.id = memberList[i].id;
-            member.save();
-        }
-    });
-
-}

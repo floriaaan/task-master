@@ -11,51 +11,30 @@ function convertJsonToMember(json) {
     let member = new Member(json.name, json.role);
     member.id = json.id;
 
-    member.save();
     return member;
 }
 
-function deleteAllAndClear() {
-    deleteAllMembers();
-    deleteAllTasks();
-    $('#tasklist').html("");
-}
 
-async function retrieveAllFromAirtable() {
-    let tasks = [];
-    base('tasks').select({
+async function init() {
+    let memberList = [];
+    return base('members').select({
+        // Selecting the first 3 records in Grid view:
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
         records.forEach(function (record) {
-            tasks.push(record);
+            memberList.push(record);
         });
         fetchNextPage();
-    }, function done() {
-        for (let k = 0; k < tasks.length; k++) {
-            let task = new Task(tasks[k].fields.name);
-            task.archived = tasks[k].fields.archived;
-            task.status = tasks[k].fields.status;
-            task.members = tasks[k].fields.members;
-            task.fromAirtable = 1;
-            task.id = 'task-' + tasks[k].id;
-            task.save();
-        }
-    });
-
-    let members = [];
-    base('members').select({
-        view: "Grid view"
-    }).eachPage(function page(records, fetchNextPage) {
-        records.forEach(function (record) {
-            members.push(record);
-        });
-        fetchNextPage();
-    }, function done() {
-        for (let k = 0; k < members.length; k++) {
-            let member = new Member(members[k].fields.name, members[k].fields.role);
-            member.id = 'member-' + members[k].id;
+    }).then(function() {
+        console.log(memberList);
+        for (let i = 0; i < memberList.length; i++) {
+            let member = new Member(memberList[i].fields.name, memberList[i].fields.role);
+            console.log(member);
+            member.id = memberList[i].id;
             member.save();
         }
+
     });
+
 
 }

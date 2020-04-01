@@ -48,9 +48,9 @@
         crossorigin="anonymous"></script>
 
 
-<script src="assets/js/utils.js"></script>
 <script src="assets/js/task.js"></script>
 <script src="assets/js/member.js"></script>
+<script src="assets/js/utils.js"></script>
 <noscript>
     <div class="jumbotron">
         <h1 class="display-4">Votre navigateur ne supporte pas le JavaScript</h1>
@@ -65,7 +65,13 @@
 <script>
     // new Member('Jacques','user').save();
     // new Member('Thibaut','admin').save();
-    putAllMembers();
+    $(document).ready(function () {
+        init().then(function () {
+            putAllMembers();
+        });
+    });
+
+
 </script>
 </body>
 </html>

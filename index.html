@@ -94,9 +94,9 @@
     test.addMember(new Member('Florian', 'admin'));
     test.addMember(new Member('Ophélie', 'user'));
     test.status = 1;*/
-
-    putAllTasks();
-
+    init().then(function () {
+        putAllTasks();
+    })
 
 
     //console.log(localStorage);

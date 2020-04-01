@@ -80,18 +80,29 @@ class Task {
     }
 
     read() {
-        let memberList = "";
+        let memberList = this.getMembers();
         let date = "";
         if (this.dateFin !== undefined) {
             date = this.dateFin;
         }
+
+        let names = "";
+        if (memberList != null) {
+            for (let i = 0; i < memberList.length; i++) {
+                names += memberList[i].name;
+                if (i !== memberList.length - 1) {
+                    names += ', ';
+                }
+            }
+        }
+
 
         if (this.status === 0) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${memberList}</span>
+                            <span>${names}</span>
                             <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
                         
@@ -107,7 +118,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${memberList}</span>
+                            <span>${names}</span>
                             <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
 
@@ -124,7 +135,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${memberList}</span>
+                            <span>${names}</span>
                             <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
                         
@@ -141,6 +152,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
+                            <span>${names}</span>
                             <span class="badge badge-secondary mx-2">${date}</span>
                         </div>
                         
@@ -168,6 +180,24 @@ class Task {
             refreshTask();
 
         });
+    }
+
+    getMembers() {
+        let memberList = [];
+        for (let json in localStorage) {
+            let object = JSON.parse(localStorage.getItem(json));
+
+            if(!this.members) {
+                this.members = [];
+            }
+
+            if (object != null && object.id != null && this.members.includes(object.id)) {
+                let m = convertJsonToMember(object);
+                memberList.push(m);
+            }
+
+        }
+        return memberList;
     }
 
 }
