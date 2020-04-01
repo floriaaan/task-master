@@ -22,6 +22,11 @@
 </head>
 <body id="body">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.js"></script>
+<script src="assets/js/sweetalert2.all.min.js"></script>
+<!-- Optional: include a polyfill for ES6 Promises for IE11 -->
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+
 <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
 <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"/>
 <script src="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth__fr.js"></script>
@@ -89,7 +94,6 @@
     test.addMember(new Member('Florian', 'admin'));
     test.addMember(new Member('Ophélie', 'user'));
     test.status = 1;*/
-
 
              putAllTasks();
 

@@ -201,6 +201,11 @@ function createTask(name, date, rappel) {
     $('#taskName').val("");
     // console.log($('#taskName').val(""))
     $('#addTaskModal').modal('hide');
+    Swal.fire(
+        t.name + ' a bien été créée',
+        '',
+        'success'
+    )
 
 }
 
@@ -292,14 +297,21 @@ function putArchivedTasks() {
 }
 
 async function deleteModal(id) {
-    let task = await getTask(id);
-    $('#deleteTaskModal').modal('show');
+    getTask(id).then(function (task) {
+        $('#deleteTaskModal').modal('show');
 
 
-    $('#deleteModal-btn').click(function () {
-        task.delete();
-        $('#deleteTaskModal').modal('hide');
+        $('#deleteModal-btn').click(function () {
+            task.delete();
+            $('#deleteTaskModal').modal('hide');
+            Swal.fire(
+                task.name + ' a bien été supprimée',
+                '',
+                'success'
+            )
+        });
     });
+
 }
 
 async function archiveModal(id) {
@@ -311,6 +323,12 @@ async function archiveModal(id) {
             (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
             task.update();
             refreshTask();
+
+            Swal.fire(
+                task.name + ' a bien été archivée',
+                '',
+                'success'
+            )
         });
     });
 }
@@ -338,6 +356,20 @@ async function toggleCompleted(id) {
         (task.status === 2) ? task.status = 1 : task.status = 2;
         task.update();
         refreshTask();
+        if(task.status === 2) {
+            Swal.fire(
+                task.name + ' a bien été terminée',
+                '',
+                'success'
+            )
+        } else {
+            Swal.fire(
+                task.name + ' a été remise à faire',
+                '',
+                'success'
+            )
+        }
+
     });
 }
 
@@ -345,6 +377,11 @@ function startTask(id) {
     getTask(id).then(function (task) {
         task.status = 1;
         task.update();
+        Swal.fire(
+            task.name + ' est commencée',
+            '',
+            'success'
+        )
         refreshTask();
     });
 
@@ -360,6 +397,11 @@ function editModal(id) {
             $('#editTaskModal').modal('hide');
             task.name = $('#editTask-name').val();
             task.update();
+            Swal.fire(
+                task.name + ' a bien été modifiée',
+                '',
+                'success'
+            )
             refreshTask();
         });
     })
