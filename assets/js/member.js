@@ -1,16 +1,47 @@
 class Member {
 
     constructor(name, role) {
-        this.id = '';
+        this.id = 'member-';
+        this.task = []; // jsp encore
         this.name = name;
         this.role = role;
+        for(let json in localStorage) {
+            console.log(JSON.parse(localStorage.getItem(json)));
+        }
+        this.mail = 'mail@mail.fr';     // Récupérer mail du membre authentifié
 
 
     }
+
+    // save() {
+    //     localStorage.setItem(this.id, JSON.stringify(this));
+    // }
+
 
     save() {
-        localStorage.setItem(this.id, JSON.stringify(this));
+        base('members').create([
+            {
+                "fields": {
+                    "task": this.task,
+                    "name": this.name,
+                    "role": this.role,
+                    "email": this.mail,
+                }
+            },
+
+        ], function (err, record) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            // console.log(this);
+            // console.log(record[0].id);
+            // this.id = record[0].id;
+
+        });
     }
+
+
 
     read() {
         $('#memberlist').append(
@@ -29,8 +60,10 @@ class Member {
             {
                 "id": this.id,
                 "fields": {
+                    "task": this.task,
                     "name": this.name,
-                    "role": this.role
+                    "role": this.role,
+                    "email": this.mail,
                 }
             }
         ], function (err, record) {

@@ -26,10 +26,10 @@ async function init() {
         });
         fetchNextPage();
     }).then(function() {
-        console.log(memberList);
+        // console.log(memberList);
         for (let i = 0; i < memberList.length; i++) {
             let member = new Member(memberList[i].fields.name, memberList[i].fields.role);
-            console.log(member);
+            // console.log(member);
             member.id = memberList[i].id;
             member.save();
         }

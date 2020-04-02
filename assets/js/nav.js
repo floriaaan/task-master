@@ -80,6 +80,7 @@ initApp = function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             // User is signed in.
+            // console.log(user);
             user.getIdToken().then(function (accessToken) {
                 $('#auth').html(user.displayName);
                 $('#sign-out').removeClass('d-none');

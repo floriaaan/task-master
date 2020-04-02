@@ -102,11 +102,12 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div>${names}</div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
                         <div class="">
+                            <button class="btn btn-outline-success mx-2" onclick="test(\'${this.id}\')"><i class="fa fa-plus"></i></button>
                             <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2 button"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
                             <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
@@ -118,12 +119,13 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div>${names}</div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
 
                         <div class="">
                             <span id="enCours" class="badge badge-danger mx-2">En cours</span>
+                            <button class="btn btn-outline-success mx-2" onclick="test(\'${this.id}\')"><i class="fa fa-plus"></i></button>
                             <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button class="btn btn-success mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
                             <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
@@ -135,12 +137,13 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div>${names}</div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
+                            <button class="btn btn-outline-success mx-2" onclick="test(\'${this.id}\')"><i class="fa fa-plus"></i></button>
                             <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button class="btn btn-warning mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
                             <button class="btn btn-secondary mx-2 button" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
@@ -152,8 +155,8 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div>${names}</div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
                         <div class="">
@@ -187,7 +190,7 @@ class Task {
         for (let json in localStorage) {
             let object = JSON.parse(localStorage.getItem(json));
 
-            if(!this.members) {
+            if (!this.members) {
                 this.members = [];
             }
 
@@ -222,8 +225,8 @@ function createTask(name, date, rappel) {
     date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
-        //t.addUser();
-        t.addDateFin(date);
+        t.addUser();
+        // t.addDateFin(date);
         t.addHrappel(rappel);
         t.save();
         t.read();
@@ -366,7 +369,7 @@ function searchInTasks(query) {
         records.forEach(function (record) {
             if (record.fields.name !== undefined) {
                 if (record.fields.name.toLowerCase().includes(query.toLowerCase())) {
-                    $('#tasklist').empty();
+                    // $('#tasklist').empty();
                     let t = new Task(record.fields.name);
                     t.read();
                 }
@@ -385,7 +388,6 @@ function refreshTask() {
 }
 
 async function toggleCompleted(id) {
-
     getTask(id).then(function (task) {
         (task.status === 2) ? task.status = 1 : task.status = 2;
         task.update();
@@ -403,7 +405,6 @@ async function toggleCompleted(id) {
                 'success'
             )
         }
-
     });
 }
 
@@ -461,6 +462,16 @@ function editModal(id) {
             refreshTask();
         });
     })
+}
+
+function test(isTask) {
+    getTask(isTask).then(function (task) {
+        // todo : récupérer id de la personne authentifiée
+        // todo : récupérer les datas de la task
+        // todo : ajouter id Authent à task.members
+        alert(task);
+        console.log(task);
+    });
 }
 
 async function getMemberfromTask(task) {
