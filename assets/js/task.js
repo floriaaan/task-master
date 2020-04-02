@@ -6,8 +6,8 @@ class Task {
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
         this.archived = 0;
-        this.dateFin = ""; //Date de fin
-        this.heureRappel = ""; //heure du rappel
+        this.dateEnd = ""; //Date de fin
+        this.timeReminder = ""; //heure du rappel
         this.fid = '';
     }
 
@@ -16,12 +16,12 @@ class Task {
         this.members.push(member.id);
     }
 
-    addDateFin(dateFin) {
-        this.dateFin = (dateFin);
+    addDateEnd(dateEnd) {
+        this.dateEnd = (dateEnd);
     }
 
-    addHrappel(heureRappel) {
-        this.heureRappel = (heureRappel)
+    addReminder(timeReminder) {
+        this.timeReminder = (timeReminder)
     }
 
     own() {
@@ -39,8 +39,8 @@ class Task {
                     "members": this.members,
                     "status": this.status,
                     "archived": this.archived,
-                    "dateFin": this.dateFin,
-                    "rappel": this.heureRappel
+                    "dateFin": this.dateEnd,
+                    "rappel": this.timeReminder
                 }
             }
 
@@ -67,8 +67,8 @@ class Task {
                         "members": this.members,
                         "status": this.status,
                         "archived": this.archived,
-                        "dateFin": this.dateFin,
-                        "rappel": this.heureRappel
+                        "dateFin": this.dateEnd,
+                        "rappel": this.timeReminder
                     }
                 }
             ], function (err, records) {
@@ -87,8 +87,8 @@ class Task {
     read() {
         let memberList = this.getMembers();
         let date = "";
-        if (this.dateFin !== undefined) {
-            date = this.dateFin;
+        if (this.dateEnd !== undefined) {
+            date = this.dateEnd;
         }
 
         let names = "";
@@ -224,18 +224,18 @@ async function getTask(id) {
         task.status = record.fields.status;
         task.archived = record.fields.archived;
         task.dateFin = record.fields.dateFin;
-        task.heureRappel = record.fields.rappel;
+        task.timeReminder = record.fields.rappel;
         return task;
     });
 }
 
-function createTask(name, date, rappel) {
+function createTask(name, date, reminder) {
     date = moment(date).format('YYYY-MM-DD hh:mm');
     if (name != null) {
         let t = new Task(name);
         //t.addUser();
-        t.addDateFin(date);
-        t.addHrappel(rappel);
+        t.addDateEnd(date);
+        t.addReminder(reminder);
         t.save();
         t.read();
     }
@@ -251,7 +251,6 @@ function createTask(name, date, rappel) {
 
 
 function fTime() {
-
             if (window.Notification) {
                 Notification.requestPermission(function (status) {
                     console.log(status)
@@ -265,15 +264,13 @@ function fTime() {
             } else {
                 alert('Votre navigateur est trop ancien pour supporter cette fonctionnalité !');
             }
-
-
 }
 
 fTime();
 
 function timeNow() {
     var now = moment().format("YYYY-MM-DD hh:mm");
-    console.log(now);
+    //console.log(now);
     base('tasks').select({
         view: "Grid view"
     }).eachPage(function page(records) {
@@ -326,7 +323,7 @@ function putAllTasks() {
             task.status = taskList[i].fields.status;
             task.archived = taskList[i].fields.archived;
             task.dateFin = taskList[i].fields.dateFin;
-            task.heureRappel = taskList[i].fields.rappel;
+            task.timeReminder = taskList[i].fields.rappel;
             task.read();
         }
     });
@@ -357,7 +354,7 @@ function putArchivedTasks() {
             task.status = taskList[i].fields.status;
             task.archived = taskList[i].fields.archived;
             task.dateFin = taskList[i].fields.dateFin;
-            task.heureRappel = taskList[i].fields.rappel;
+            task.timeReminder = taskList[i].fields.rappel;
 
 
             task.read();
@@ -480,7 +477,7 @@ function editModal(id) {
         $('#editTask-name').val(task.name);
         $('#editTask-title').html(task.name);
         $('#editTask-Date').val(moment(task.dateFin).format('YYYY-MM-DD\Thh:mm'));
-        $('#editTask-Rappel').val(task.heureRappel);
+        $('#editTask-Rappel').val(task.timeReminder);
         $('#socialShare').attr('href', 'https://twitter.com/intent/tweet?text=Ma tâche est de : ' + task.name + ' sur ' + window.location.href)
         $('#editTaskModal').modal('show');
 
@@ -491,7 +488,7 @@ function editModal(id) {
 
             $('#editTaskModal').modal('hide');
             task.dateFin = date;
-            task.heureRappel = rappel;
+            task.timeReminder = rappel;
             task.name = $('#editTask-name').val();
             task.update();
             Swal.fire(
