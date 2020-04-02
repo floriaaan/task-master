@@ -72,56 +72,27 @@
     </div>
 </noscript>
 
-<div class="container-fluid p-5">
-    <h1 class="display-4">Liste des tâches</h1>
-    <hr class="mx-5 my-2">
+<div id="userIsConnected">
+    <div class="container">
 
-    <div class="row justify-content-between">
-        <div class="col-md-3">
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="status0" checked>
-                <label class="custom-control-label" for="status0">Tâches à commencer</label>
-            </div>
+        <div class="row">
+            <h1 class="display-4" id="usernameTitle"></h1>
+            <p class="lead blockquote" id="useremailSubtitle"></p>
         </div>
-        <div class="col-md-3">
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="status1" checked>
-                <label class="custom-control-label" for="status1">Tâches en cours</label>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="status2" checked>
-                <label class="custom-control-label" for="status2">Tâches terminées</label>
-            </div>
-        </div>
+
     </div>
 
-    <hr class="mx-5 my-2">
-    <div class="" id="tasklist"></div>
-    <div class="row justify-content-end jumbotron mt-5">
-        <button class="btn btn-success mx-2 w-25"
-                onclick="if(!$('#addtask-btn').hasClass('disabled')){$('#addTaskModal').modal('show');}"
-                id="addtask-btn"><i class="fa fa-plus"></i>&nbsp;&nbsp;Ajouter une tâche
-        </button>
-
+    <div class="container-fluid p-5">
+        <div id="tasklist"></div>
     </div>
 </div>
-
 <script>
-    putAllTasks();
-
-    $('#status0').click(function () {
-        $('[id*="status0"]').toggleClass('d-none')
-    });
-
-    $('#status1').click(function () {
-        $('[id*="status1"]').toggleClass('d-none')
-    });
-
-    $('#status2').click(function () {
-        $('[id*="status2"]').toggleClass('d-none')
-    });
+    authMember = localStorage.getItem('authMember');
+    $(document).ready(function () {
+        $('#usernameTitle').html(authMember.name);
+        $('#useremailSubtitle').html(authMember.email);
+        putUserTasks(authMember.id);
+    })
 
 </script>
 </body>

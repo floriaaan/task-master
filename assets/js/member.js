@@ -24,7 +24,7 @@ class Member {
         if (!inArray) {
             localStorage.setItem(this.id, JSON.stringify(this));
         } else {
-            console.log('Already exists in LocalStorage')
+            //console.log('Already exists in LocalStorage')
         }
     }
 
@@ -51,7 +51,7 @@ class Member {
 
                 this.id = record[0].id;
                 this.fid = record[0].fields.id;
-                console.log(this);
+                //console.log(this);
                 resolve();
             });
         });
@@ -64,7 +64,6 @@ class Member {
             `<div class="row justify-content-between task p-2" id="${this.id}">
                             <p class="lead">${this.id}</p>
                             <p class="lead">${this.name}</p>
-                            <p class="lead">${this.role}</p>
              </div>`);
         setTimeout(function () {
             $('.task').css('opacity', 1);
@@ -88,8 +87,7 @@ class Member {
                 return;
             }
 
-            console.log('Updated', record.fields.name);
-            console.log('Updated', record.fields.role);
+            //console.log('Updated', record.fields.name);
             localStorage.setItem(this.id, JSON.stringify(this));
         });
 
@@ -102,7 +100,7 @@ class Member {
                 console.error(err);
                 return;
             }
-            console.log('Deleted', deletedRecords.length, 'records');
+            //console.log('Deleted', deletedRecords.length, 'records');
             localStorage.removeItem(this.id);
         });
 
@@ -128,18 +126,5 @@ function putAllMembers() {
         }
 
     }
-}
-
-function saveAllMembers() {
-    for(let json in localStorage) {
-        let object = JSON.parse(localStorage.getItem(json));
-
-        if (object != null && object.fromAirtable !== 1) {
-            let m = convertJsonToMember(object);
-            m.saveAirtable();
-        }
-
-    }
-
 }
 

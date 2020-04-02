@@ -49,7 +49,7 @@ class Task {
                 console.error(err);
                 return;
             }
-            console.log(record[0].id);
+            //console.log(record[0].id);
             this.id = record[0].id;
             this.fid = record[0].fields.id;
 //            this.id = record[0].id;
@@ -77,7 +77,7 @@ class Task {
                     reject();
                 }
                 records.forEach(function (record) {
-                    console.log('Updated ',record.id);
+                    //console.log('Updated ', record.id);
                 });
                 resolve();
             });
@@ -92,7 +92,6 @@ class Task {
         }
 
         let names = "";
-
 
 
         if (this.status === 0) {
@@ -167,7 +166,7 @@ class Task {
         }
         if (memberList != null) {
             for (let i = 0; i < memberList.length; i++) {
-                $('#CollabNames-'+this.id).append(`<span class="badge badge-primary mx-2">${memberList[i].name}</span>`) ;
+                $('#CollabNames-' + this.id).append(`<span class="badge badge-primary mx-2">${memberList[i].name}</span>`);
 
             }
         }
@@ -183,7 +182,7 @@ class Task {
                 console.error(err);
                 return;
             }
-            console.log('Deleted', deletedRecords.length, 'records');
+            //console.log('Deleted', deletedRecords.length, 'records');
 
             refreshTask();
 
@@ -205,18 +204,17 @@ class Task {
                 memberList.push(m);
             }
 
-            }
+        }
 
         return memberList;
     }
 }
 
 
-
 async function getTask(id) {
     return base('tasks').find(id).then(function (record) {
 
-        console.log('Retrieved', record.id);
+        //console.log('Retrieved', record.id);
         let task = new Task(record.fields.name);
         task.id = id;
         task.fid = record.fields.id;
@@ -229,51 +227,62 @@ async function getTask(id) {
     });
 }
 
-function createTask(name, date, rappel) {
-    date = moment(date).format('YYYY-MM-DD hh:mm');
-    if (name != null) {
-        let t = new Task(name);
-        //t.addUser();
-        t.addDateFin(date);
-        t.addHrappel(rappel);
-        t.save();
-        t.read();
-    }
-    $('#taskName').val("");
-    $('#addTaskModal').modal('hide');
-    Swal.fire(
-        name + ' a bien été créée',
-        '',
-        'success'
-    )
+async function getMemberfromTask(task) {
+    let memberList = [];
+    base('members').select({
+        // Selecting the first 3 records in Grid view:
+        maxRecords: 3,
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        // This function (`page`) will get called for each page of records.
 
+        records.forEach(function (record) {
+            if (record.fields.task.includes(task)) {
+
+                memberList.push(record);
+            }
+        });
+
+        fetchNextPage();
+
+    }, function done(err) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        let names = "";
+        for (let i = 0; i < memberList.length; i++) {
+            names += (memberList[i].fields.name);
+            if (i !== memberList.length - 1) {
+                names += ', ';
+            }
+        }
+
+        return names;
+
+    });
 }
 
 
 function fTime() {
 
-            if (window.Notification) {
-                Notification.requestPermission(function (status) {
-                    console.log(status)
-                    statutNotif = status;
-                    console.log(statutNotif);
-                    if (status === 'granted') {
-                        o= 'granted';
-                        timeNow();
-                    }
-                })
-            } else {
-                alert('Votre navigateur est trop ancien pour supporter cette fonctionnalité !');
+    if (window.Notification) {
+        Notification.requestPermission(function (status) {
+            statutNotif = status;
+            if (status === 'granted') {
+                o = 'granted';
+                timeNow();
             }
+        })
+    } else {
+        alert('Votre navigateur est trop ancien pour supporter cette fonctionnalité !');
+    }
 
 
 }
 
-fTime();
-
 function timeNow() {
     var now = moment().format("YYYY-MM-DD hh:mm");
-    console.log(now);
     base('tasks').select({
         view: "Grid view"
     }).eachPage(function page(records) {
@@ -284,8 +293,7 @@ function timeNow() {
                         'Votre tâche ' + record.fields.name + ' aura lieu dans ' + record.fields.rappel + 'minutes',
                         '',
                         'info'
-
-                    )
+                    );
                     clearTimeout(timeOutTen);
                     var timeOutSixty = setTimeout(timeNow, 60000);
                     //console.log(endNotif);
@@ -295,111 +303,8 @@ function timeNow() {
     });
     var timeOutTen = setTimeout(timeNow, 10000); /* rappel après n secondes = endNotif millisecondes */
     timeOutTen;
-    console.log('gnee')
 }
 
-
-
-function putAllTasks() {
-    let taskList = [];
-    base('tasks').select({
-        // Selecting the first 3 records in Grid view:
-        view: "Grid view"
-    }).eachPage(function page(records, fetchNextPage) {
-        records.forEach(function (record) {
-            if (record.fields.archived !== 1)
-                taskList.push(record);
-        });
-        fetchNextPage();
-    }, function done(err) {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        taskList.sort(function(a, b) {
-            return a.fields.status - b.fields.status;
-        });
-        for (let i = 0; i < taskList.length; i++) {
-            let task = new Task(taskList[i].fields.name);
-            task.id = taskList[i].id;
-            task.members = taskList[i].fields.members;
-            task.status = taskList[i].fields.status;
-            task.archived = taskList[i].fields.archived;
-            task.dateFin = taskList[i].fields.dateFin;
-            task.heureRappel = taskList[i].fields.rappel;
-            task.read();
-        }
-    });
-}
-
-function putArchivedTasks() {
-    let taskList = [];
-    base('tasks').select({
-        // Selecting the first 3 records in Grid view:
-        view: "Grid view"
-    }).eachPage(function page(records, fetchNextPage) {
-        records.forEach(function (record) {
-            if (record.fields.archived === 1 && record.fields.archived !== undefined) {
-                taskList.push(record);
-            }
-        });
-        fetchNextPage();
-    }, function done(err) {
-        if (err) {
-            console.error(err);
-            return;
-        }
-
-        for (let i = 0; i < taskList.length; i++) {
-            let task = new Task(taskList[i].fields.name);
-            task.id = taskList[i].id;
-            task.members = taskList[i].fields.members;
-            task.status = taskList[i].fields.status;
-            task.archived = taskList[i].fields.archived;
-            task.dateFin = taskList[i].fields.dateFin;
-            task.heureRappel = taskList[i].fields.rappel;
-
-
-            task.read();
-        }
-    });
-}
-
-async function deleteModal(id) {
-    getTask(id).then(function (task) {
-        $('#deleteTaskModal').modal('show');
-
-
-        $('#deleteModal-btn').click(function () {
-            task.delete();
-            $('#deleteTaskModal').modal('hide');
-            Swal.fire(
-                task.name + ' a bien été supprimée',
-                '',
-                'success'
-            )
-        });
-    });
-}
-
-async function archiveModal(id) {
-    getTask(id).then(function (task) {
-        $('#archiveTaskModal').modal('show');
-
-        $('#archiveModal-btn').click(function () {
-            $('#archiveTaskModal').modal('hide');
-            (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
-            task.update();
-            refreshTask();
-
-            Swal.fire(
-                task.name + ' a bien été archivée',
-                '',
-                'success'
-            )
-        });
-    });
-}
 
 function searchInTasks(query) {
     base('tasks').select({
@@ -417,15 +322,10 @@ function searchInTasks(query) {
     });
 }
 
-function refreshTask() {
-    $('#tasklist').empty();
-    if (window.location.href.includes('archive')) {
-        putArchivedTasks();
-    } else {
-        putAllTasks();
-    }
-}
 
+/*
+    Updating tasks attributes functions
+ */
 function toggleCompleted(id) {
     getTask(id).then(function (task) {
         (task.status === 2) ? task.status = 1 : task.status = 2;
@@ -475,6 +375,70 @@ function startTask(id) {
     });
 }
 
+function assignToTask(id) {
+    getTask(id).then(function (task) {
+        //console.log(authMember);
+
+        if (task.members == null) {
+            Swal.fire(
+                'Vous avez bien été ajouté à la tâche',
+                '',
+                'success'
+            )
+            task.members = [authMember.id];
+        } else {
+            if (!task.members.includes(authMember.id)) {
+                task.members.push(authMember.id);
+                Swal.fire(
+                    'Vous avez bien été ajouté à la tâche',
+                    '',
+                    'success'
+                )
+            } else {
+                let indexOfMember = task.members.indexOf(authMember.id);
+                if (indexOfMember > -1) {
+                    task.members.splice(indexOfMember, 1);
+                }
+                Swal.fire(
+                    'Vous avez bien été retiré de la tâche',
+                    '',
+                    'success'
+                )
+            }
+        }
+
+
+        task.update().then(function () {
+
+            refreshTask();
+        });
+    });
+}
+
+
+/*
+    Print Modal for differents actions
+ */
+function createTask(name, date, rappel) {
+    date = moment(date).format('YYYY-MM-DD hh:mm');
+    if (name != null) {
+        let t = new Task(name);
+        //t.addUser();
+        t.addDateFin(date);
+        t.addHrappel(rappel);
+        t.save();
+        t.read();
+    }
+    $('#taskName').val("");
+    $('#addTaskModal').modal('hide');
+    Swal.fire(
+        name + ' a bien été créée',
+        '',
+        'success'
+    )
+
+}
+
 function editModal(id) {
     getTask(id).then(function (task) {
         $('#editTask-name').val(task.name);
@@ -498,69 +462,158 @@ function editModal(id) {
                 task.name + ' a bien été modifiée',
                 '',
                 'success'
-            )
+            );
             refreshTask();
         });
     })
 }
 
-async function getMemberfromTask(task) {
-    let memberList = [];
-    base('members').select({
+async function deleteModal(id) {
+    getTask(id).then(function (task) {
+        $('#deleteTaskModal').modal('show');
+
+
+        $('#deleteModal-btn').click(function () {
+            task.delete();
+            $('#deleteTaskModal').modal('hide');
+            Swal.fire(
+                task.name + ' a bien été supprimée',
+                '',
+                'success'
+            )
+        });
+    });
+}
+
+async function archiveModal(id) {
+    getTask(id).then(function (task) {
+        $('#archiveTaskModal').modal('show');
+
+        $('#archiveModal-btn').click(function () {
+            $('#archiveTaskModal').modal('hide');
+            (task.archived === undefined || task.archived) ? task.archived = 0 : task.archived = 1;
+            task.update();
+            refreshTask();
+
+            Swal.fire(
+                task.name + ' a bien été archivée',
+                '',
+                'success'
+            )
+        });
+    });
+}
+
+
+
+/*
+    Print Tasks on differents views
+ */
+function putAllTasks() {
+    let taskList = [];
+    base('tasks').select({
         // Selecting the first 3 records in Grid view:
-        maxRecords: 3,
         view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
-        // This function (`page`) will get called for each page of records.
-
         records.forEach(function (record) {
-            if (record.fields.task.includes(task)) {
-
-                memberList.push(record);
-            }
+            if (record.fields.archived !== 1)
+                taskList.push(record);
         });
-
         fetchNextPage();
-
     }, function done(err) {
         if (err) {
             console.error(err);
             return;
         }
-        let names = "";
-        for (let i = 0; i < memberList.length; i++) {
-            names += (memberList[i].fields.name);
-            if (i !== memberList.length - 1) {
-                names += ', ';
-            }
-        }
-
-        return names;
-
-    });
-}
-
-function assignToTask(id) {
-    getTask(id).then(function (task) {
-        console.log(authMember);
-
-        if (task.members == null) {
-            task.members = [authMember.id];
-        } else {
-            if (!task.members.includes(authMember.id)) {
-                task.members.push(authMember.id);
-            } else {
-                let indexOfMember = task.members.indexOf(authMember.id);
-                if (indexOfMember > -1) {
-                    task.members.splice(indexOfMember, 1);
-                }
-            }
-        }
-
-
-        task.update().then(function () {
-            refreshTask();
+        taskList.sort(function (a, b) {
+            return a.fields.status - b.fields.status;
         });
+        for (let i = 0; i < taskList.length; i++) {
+            let task = new Task(taskList[i].fields.name);
+            task.id = taskList[i].id;
+            task.members = taskList[i].fields.members;
+            task.status = taskList[i].fields.status;
+            task.archived = taskList[i].fields.archived;
+            task.dateFin = taskList[i].fields.dateFin;
+            task.heureRappel = taskList[i].fields.rappel;
+            task.read();
+        }
     });
 }
 
+function putArchivedTasks() {
+    let taskList = [];
+    base('tasks').select({
+        // Selecting the first 3 records in Grid view:
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        records.forEach(function (record) {
+            if (record.fields.archived === 1 && record.fields.archived !== undefined) {
+                taskList.push(record);
+            }
+        });
+        fetchNextPage();
+    }, function done(err) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        for (let i = 0; i < taskList.length; i++) {
+            let task = new Task(taskList[i].fields.name);
+            task.id = taskList[i].id;
+            task.members = taskList[i].fields.members;
+            task.status = taskList[i].fields.status;
+            task.archived = taskList[i].fields.archived;
+            task.dateFin = taskList[i].fields.dateFin;
+            task.heureRappel = taskList[i].fields.rappel;
+
+
+            task.read();
+        }
+    });
+}
+
+function putUserTasks(id) {
+    let taskList = [];
+    base('tasks').select({
+        // Selecting the first 3 records in Grid view:
+        view: "Grid view"
+    }).eachPage(function page(records, fetchNextPage) {
+        records.forEach(function (record) {
+
+            if (record.fields.archived !== 1 && record.fields.members && record.fields.members.includes(id))
+                taskList.push(record);
+        });
+        fetchNextPage();
+    }, function done(err) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        taskList.sort(function (a, b) {
+            return a.fields.status - b.fields.status;
+        });
+        for (let i = 0; i < taskList.length; i++) {
+            let task = new Task(taskList[i].fields.name);
+            task.id = taskList[i].id;
+            task.members = taskList[i].fields.members;
+            task.status = taskList[i].fields.status;
+            task.archived = taskList[i].fields.archived;
+            task.dateFin = taskList[i].fields.dateFin;
+            task.heureRappel = taskList[i].fields.rappel;
+            task.read();
+        }
+    });
+}
+
+function refreshTask() {
+    $('#tasklist').empty();
+    if (window.location.href.includes('archive')) {
+        putArchivedTasks();
+    } else {
+        putAllTasks();
+    }
+}
+
+fTime();

@@ -27,6 +27,7 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                </a>\n' +
     '                <div class="dropdown-menu" aria-labelledby="auth">\n' +
     '                    <div class="dropdown-item" id="sign-in" onclick="$(\'#login\').modal(\'show\')">Se connecter</div>\n' +
+    '                    <div class="dropdown-item" id="account" ><a href="user.html">Mon profil</a></div>\n' +
     '                    <div class="dropdown-item d-none" id="sign-out">Déconnexion</pre></div>' +
     '                </div>\n' +
     '            </li>\n' +
@@ -41,7 +42,7 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
 
 $('#search').keyup(function () {
     let query = $('#search').val();
-    console.log(query)
+    //console.log(query)
     $('#tasklist').empty()
     if (query !== '' && query != null) {
         searchInTasks(query);
@@ -63,6 +64,7 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 var authMember = null;
+let userLogged = null;
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 ui.start('#firebaseui-auth-container', {
     signInOptions: [
@@ -89,13 +91,13 @@ ui.start('#firebaseui-auth-container', {
     'credentialHelper': firebaseui.auth.CredentialHelper.NONE
 });
 
-let userLogged = null;
+
 
 window.addEventListener('load', function () {
-    initApp();
+    initAuth();
 });
 
-initApp = function () {
+initAuth = function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             // User is signed in.
@@ -103,6 +105,7 @@ initApp = function () {
             user.getIdToken().then(function (accessToken) {
                 $('#auth').html(user.displayName);
                 $('#sign-out').removeClass('d-none');
+                $('#account').removeClass('d-none');
                 $('#sign-in').addClass('d-none');
                 userLogged = user;
                 $('#login').modal('hide');
@@ -114,15 +117,17 @@ initApp = function () {
                 for (let json in localStorage) {
                     let object = JSON.parse(localStorage.getItem(json));
                     if(object != null && object.id != null && object.firebaseuid === user.uid) {
-                        console.log(object)
+                        //console.log(object)
                         authMember.id = object.id;
                     }
                 }
+                localStorage.setItem('authMember', JSON.stringify(authMember));
             });
 
         } else {
             // User is signed out.
             $('#sign-out').addClass('d-none');
+            $('#account').addClass('d-none');
             $('#addtask-btn').addClass('disabled');
             $('#deleteAllLocalStorage-btn').addClass('disabled');
 
