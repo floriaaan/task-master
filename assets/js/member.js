@@ -1,13 +1,14 @@
 class Member {
 
     constructor(name, role, email) {
-        this.id = ;
+        this.id = '';
         this.task = []; // jsp encore
         this.name = name;
         this.role = role;
         this.email = email;     // Récupérer mail du membre authentifié
         this.fromAirtable = 0;
-        this.
+        this.firebaseuid = '';
+        this.fid = '';
 
 
     }
@@ -16,7 +17,7 @@ class Member {
         let inArray = false;
         for(let json in localStorage) {
             let object = JSON.parse(localStorage.getItem(json));
-            if (object != null && object.id != null && object.email === this.email) {
+            if (object != null && object.id != null && object.firebaseuid === this.firebaseuid) {
                 inArray = true;
             }
         }
@@ -29,22 +30,28 @@ class Member {
 
 
     saveAirtable() {
-        return base('members').create([
-            {
-                "fields": {
-                    "task": this.task,
-                    "name": this.name,
-                    "role": this.role,
-                    "email": this.email,
+
+        return new Promise((resolve, reject) => {
+            base('members').create([
+                {
+                    "fields": {
+                        "task": this.task,
+                        "name": this.name,
+                        "role": this.role,
+                        "email": this.email,
+                        "firebaseuid": this.firebaseuid
+                    }
+                },
+
+            ], (err, record) => {
+                if (err) {
+                    console.error(err);
+                    reject();
                 }
-            },
-
-        ], function (err, record) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-
+                this.id = record[0].id;
+                this.fid = record[0].fields.id;
+                resolve();
+            });
         });
     }
 
@@ -55,7 +62,6 @@ class Member {
             `<div class="row justify-content-between task p-2" id="${this.id}">
                             <p class="lead">${this.id}</p>
                             <p class="lead">${this.name}</p>
-                            <p class="lead">${this.role}</p>
              </div>`);
         setTimeout(function () {
             $('.task').css('opacity', 1);

@@ -1,14 +1,15 @@
 class Task {
 
     constructor(name) {
-        this.id = 'task-';
+        this.id = '';
         this.name = name; // Nom de la tâche
-        this.members = []; // Tableau d'objet Membre
+        this.members = [2]; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
         this.archived = 0;
         this.dateFin = ""; //Date de fin
         this.heureRappel = ""; //heure du rappel
         this.fid = '';
+
     }
 
     addMember(member) {
@@ -25,8 +26,9 @@ class Task {
     }
 
     own() {
-        if (userLogged != null)
-            this.addMember(new Member(userLogged.displayName, 'owner', $('#userEmail').val()));
+        if (userLogged != null) {
+            this.addMember(new Member(userLogged.displayName, 'owner', userLogged.email));
+        }
     }
 
 
@@ -41,20 +43,22 @@ class Task {
                     "dateFin": this.dateFin,
                     "rappel": this.heureRappel
                 }
-            },
+            }
 
-        ], function (err, record) {
+        ], (err, record) => {
             if (err) {
                 console.error(err);
                 return;
             }
             console.log(record[0].id);
             this.id = record[0].id;
+            this.fid = record[0].fields.id;
 
         });
     }
 
     update() {
+        console.log(this.members);
         base('tasks').replace([
             {
                 "id": this.id,
@@ -106,7 +110,7 @@ class Task {
                         </div>
                         
                         <div class="">
-                            <button class="btn btn-outline-success mx-2" onclick="test(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-success mx-2" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
                             <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2 button"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
                             <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
@@ -124,7 +128,7 @@ class Task {
 
                         <div class="">
                             <span id="enCours" class="badge badge-danger mx-2">En cours</span>
-                            <button class="btn btn-outline-success mx-2" onclick="test(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-success mx-2" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
                             <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button class="btn btn-success mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
                             <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
@@ -142,7 +146,7 @@ class Task {
                         
                         <div class="">
                             <span id="finie" class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-outline-success mx-2" onclick="test(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-success mx-2" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
                             <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button class="btn btn-warning mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
                             <button class="btn btn-secondary mx-2 button" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
@@ -224,7 +228,7 @@ function createTask(name, date, rappel) {
     date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
-        t.own();
+        //t.own();
         t.addDateFin(date);
         t.addHrappel(rappel);
         t.save();
@@ -386,7 +390,7 @@ function refreshTask() {
     }
 }
 
-async function toggleCompleted(id) {
+function toggleCompleted(id) {
     getTask(id).then(function (task) {
         (task.status === 2) ? task.status = 1 : task.status = 2;
         task.update();
@@ -463,15 +467,6 @@ function editModal(id) {
     })
 }
 
-function test(isTask) {
-    getTask(isTask).then(function (task) {
-        // todo : récupérer id de la personne authentifiée
-        // todo : récupérer les datas de la task
-        // todo : ajouter id Authent à task.members
-        alert(task);
-        console.log(task);
-    });
-}
 
 async function getMemberfromTask(task) {
     let memberList = [];
@@ -506,6 +501,29 @@ async function getMemberfromTask(task) {
 
         return names;
 
+    });
+}
+
+function assignToTask(id) {
+    getTask(id).then(function (task) {
+        console.log(authMember);
+
+        if (task.members == null) {
+            task.members = [authMember.id];
+        } else {
+            if (!task.members.includes(authMember.id)) {
+                task.members.push(authMember.id);
+            } else {
+                let indexOfMember = task.members.indexOf(authMember.id);
+                if (indexOfMember > -1) {
+                    task.members.splice(indexOfMember, 1);
+                }
+            }
+        }
+
+
+        task.update();
+        refreshTask();
     });
 }
 

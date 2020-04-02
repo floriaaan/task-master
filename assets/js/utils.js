@@ -31,7 +31,9 @@ async function init() {
             let member = new Member(memberList[i].fields.name, memberList[i].fields.role, memberList[i].fields.email);
             // console.log(member);
             member.id = memberList[i].id;
+            member.fid = memberList[i].fields.id;
             member.task = memberList[i].fields.task;
+            member.firebaseuid = memberList[i].fields.firebaseuid;
             member.fromAirtable = 1;
             member.save();
         }
@@ -40,3 +42,5 @@ async function init() {
 
 
 }
+
+init();
