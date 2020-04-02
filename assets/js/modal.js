@@ -15,7 +15,7 @@ $('#body').append('<div class="modal fade" id="addTaskModal" tabindex="-1" role=
     '            <label for="taskDate">Doit être fait pour le </label>\n' +
     '            <input type="datetime-local" class="form-control" id="taskDate">\n' +
     '                 <label for="taskDate">Temps de rappel </label>\n' +
-    '                 <select class="form-control" name="timeSelect" id="taskRappel"> ' +
+    '                 <select class="form-control" name="timeSelect" id="taskReminder"> ' +
     '                 <option value="0">--selectionner le temps avant le rappel--</option>' +
     '                 <option value="5">5 minutes</option>' +
     '                 <option value="10">10 minutes</option>' +
@@ -25,7 +25,7 @@ $('#body').append('<div class="modal fade" id="addTaskModal" tabindex="-1" role=
     '      </div>\n' +
     '      <div class="modal-footer">\n' +
     '        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>\n' +
-    '        <button type="button" class="btn btn-primary" onclick="createTask($(\'#taskName\').val(),$(\'#taskDate\').val(),$(\'#taskRappel\').val());">Ajouter une tâche</button>\n' +
+    '        <button type="button" class="btn btn-primary" onclick="createTask($(\'#taskName\').val(),$(\'#taskDate\').val(),$(\'#taskReminder\').val());">Ajouter une tâche</button>\n' +
     '      </div>\n' +
     '    </div>\n' +
     '  </div>\n' +

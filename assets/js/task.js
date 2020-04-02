@@ -9,7 +9,6 @@ class Task {
         this.dateFin = ""; //Date de fin
         this.heureRappel = ""; //heure du rappel
         this.fid = '';
-
     }
 
     addMember(member) {
@@ -53,6 +52,7 @@ class Task {
             console.log(record[0].id);
             this.id = record[0].id;
             this.fid = record[0].fields.id;
+//            this.id = record[0].id;
 
         });
     }
@@ -201,14 +201,17 @@ class Task {
 
             if (object != null && object.id != null && this.members.includes(object.id)) {
                 let m = convertJsonToMember(object);
+                //console.log(record.fields)
                 memberList.push(m);
             }
 
-        }
+            }
+
         return memberList;
     }
-
 }
+
+
 
 async function getTask(id) {
     return base('tasks').find(id).then(function (record) {
@@ -227,9 +230,10 @@ async function getTask(id) {
 }
 
 function createTask(name, date, rappel) {
-    date = moment(date).format('YYYY-MM-DD h:mm');
+    date = moment(date).format('YYYY-MM-DD hh:mm');
     if (name != null) {
         let t = new Task(name);
+        //t.addUser();
         t.addDateFin(date);
         t.addHrappel(rappel);
         t.save();
@@ -247,26 +251,54 @@ function createTask(name, date, rappel) {
 
 
 function fTime() {
-    var now = moment().format("YYYY-MM-DD h:mm");
-    base('tasks').select({
-        view: "Grid view"
-    }).eachPage(function page(records) {
-        // This function (`page`) will get called for each page of records.
-        records.forEach(function (record) {
-            if (record.fields.dateFin !== undefined) {
-                //console.log('la valeur de la date est|' + (((Date.parse(record.fields.dateFin)/1000)/60) - ((Date.parse(now)/1000)/60 )) );
-                //console.log('Le rappel est |' + record.fields.rappel  +'|');
-                if (((Date.parse(record.fields.dateFin) / 1000) / 60) - ((Date.parse(now) / 1000) / 60) == record.fields.rappel) {
-                    alert('Vous avez une tache à effectuer :' + record.fields.name);
-                }
+
+            if (window.Notification) {
+                Notification.requestPermission(function (status) {
+                    console.log(status)
+                    statutNotif = status;
+                    console.log(statutNotif);
+                    if (status === 'granted') {
+                        o= 'granted';
+                        timeNow();
+                    }
+                })
+            } else {
+                alert('Votre navigateur est trop ancien pour supporter cette fonctionnalité !');
             }
-        });
-    });
-    setTimeout(fTime, 60000); /* rappel après 2 secondes = 2000 millisecondes */
+
 
 }
 
 fTime();
+
+function timeNow() {
+    var now = moment().format("YYYY-MM-DD hh:mm");
+    console.log(now);
+    base('tasks').select({
+        view: "Grid view"
+    }).eachPage(function page(records) {
+        records.forEach(function (record) {
+            if (record.fields.dateFin !== undefined) {
+                if (((Date.parse(record.fields.dateFin) / 1000) / 60) - ((Date.parse(now) / 1000) / 60) == record.fields.rappel) {
+                    Swal.fire(
+                        'Votre tâche ' + record.fields.name + ' aura lieu dans ' + record.fields.rappel + 'minutes',
+                        '',
+                        'info'
+
+                    )
+                    clearTimeout(timeOutTen);
+                    var timeOutSixty = setTimeout(timeNow, 60000);
+                    //console.log(endNotif);
+                }
+            }
+        });
+    });
+    var timeOutTen = setTimeout(timeNow, 10000); /* rappel après n secondes = endNotif millisecondes */
+    timeOutTen;
+    console.log('gnee')
+}
+
+
 
 function putAllTasks() {
     let taskList = [];
@@ -412,6 +444,7 @@ function toggleCompleted(id) {
                 'success'
             )
         }
+
     });
 }
 
@@ -470,7 +503,6 @@ function editModal(id) {
         });
     })
 }
-
 
 async function getMemberfromTask(task) {
     let memberList = [];

@@ -64,6 +64,7 @@ class Member {
             `<div class="row justify-content-between task p-2" id="${this.id}">
                             <p class="lead">${this.id}</p>
                             <p class="lead">${this.name}</p>
+                            <p class="lead">${this.role}</p>
              </div>`);
         setTimeout(function () {
             $('.task').css('opacity', 1);
@@ -88,6 +89,7 @@ class Member {
             }
 
             console.log('Updated', record.fields.name);
+            console.log('Updated', record.fields.role);
             localStorage.setItem(this.id, JSON.stringify(this));
         });
 
