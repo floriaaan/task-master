@@ -25,7 +25,7 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                   aria-haspopup="true" aria-expanded="false">\n' +
     '                    Authentification\n' +
     '                </a>\n' +
-    '                <div class="dropdown-menu" style="width: 100vh; margin-right: 0" aria-labelledby="auth">\n' +
+    '                <div class="dropdown-menu" aria-labelledby="auth">\n' +
     '                    <div class="dropdown-item" id="sign-in" onclick="$(\'#login\').modal(\'show\')">Se connecter</div>\n' +
     '                    <div class="dropdown-item d-none" id="sign-out">Déconnexion</pre></div>' +
     '                </div>\n' +
@@ -36,7 +36,8 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '            <input type="search" class="form-control mr-sm-2" id="search" placeholder="Recherche">\n' +
     '        </div>\n' +
     '    </div>\n' +
-    '</nav>\n');
+    '</nav>' +
+    '<input type="hidden" id="userEmail" value="">\n');
 
 $('#search').keyup(function () {
     let query = $('#search').val();
@@ -61,16 +62,34 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
+var authMember = null;
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 ui.start('#firebaseui-auth-container', {
     signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
+    callbacks : {
+        signInSuccessWithAuthResult : function (authResult) {
+
+            if(authResult.additionalUserInfo.isNewUser){
+                authMember = new Member(authResult.user.displayName, 'user', authResult.user.email);
+                authMember.firebaseuid = authResult.user.uid;
+                authMember.saveAirtable();
+                init().then(function () {
+                    for (let json in localStorage) {
+                        let object = JSON.parse(localStorage.getItem(json));
+                        if(object != null && object.id != null && object.firebaseuid === authResult.user.uid) {
+                            authMember.id = object.id;
+                        }
+                    }
+                });
+            }
+        }
+    },
     'credentialHelper': firebaseui.auth.CredentialHelper.NONE
 });
 
-var userLoggged = null;
+let userLogged = null;
 
 window.addEventListener('load', function () {
     initApp();
@@ -80,14 +99,25 @@ initApp = function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             // User is signed in.
+            //console.log(user);
             user.getIdToken().then(function (accessToken) {
                 $('#auth').html(user.displayName);
                 $('#sign-out').removeClass('d-none');
                 $('#sign-in').addClass('d-none');
-                userLoggged = user;
+                userLogged = user;
                 $('#login').modal('hide');
                 $('#addtask-btn').removeClass('disabled');
                 $('#deleteAllLocalStorage-btn').removeClass('disabled');
+                $('#userEmail').val(user.email);
+                authMember = new Member(userLogged.displayName, 'user', userLogged.email);
+                authMember.firebaseuid = user.uid;
+                for (let json in localStorage) {
+                    let object = JSON.parse(localStorage.getItem(json));
+                    if(object != null && object.id != null && object.firebaseuid === user.uid) {
+                        console.log(object)
+                        authMember.id = object.id;
+                    }
+                }
             });
 
         } else {
@@ -98,7 +128,8 @@ initApp = function () {
 
             $('#sign-in').removeClass('d-none');
             $('#auth').html('Mon compte');
-            userLoggged = null;
+            $('#userEmail').val('');
+            userLogged = null;
             ui.start('#firebaseui-auth-container', {
                 signInOptions: [
                     firebase.auth.EmailAuthProvider.PROVIDER_ID
@@ -114,4 +145,3 @@ initApp = function () {
         firebase.auth().signOut();
     });
 };
-

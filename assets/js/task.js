@@ -1,7 +1,7 @@
 class Task {
 
     constructor(name) {
-        this.id = 'task-';
+        this.id = '';
         this.name = name; // Nom de la tâche
         this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
@@ -9,11 +9,11 @@ class Task {
         this.dateFin = ""; //Date de fin
         this.heureRappel = ""; //heure du rappel
         this.fid = '';
+
     }
 
     addMember(member) {
         member.save();
-        member.id = localStorage.getItem('mem');
         this.members.push(member.id);
     }
 
@@ -25,9 +25,10 @@ class Task {
         this.heureRappel = (heureRappel)
     }
 
-    addUser() {
-        if (userLoggged != null)
-            this.addMember(new Member(userLoggged.displayName, 'owner'));
+    own() {
+        if (userLogged != null) {
+            this.addMember(new Member(userLogged.displayName, 'owner', userLogged.email));
+        }
     }
 
 
@@ -42,41 +43,45 @@ class Task {
                     "dateFin": this.dateFin,
                     "rappel": this.heureRappel
                 }
-            },
+            }
 
-        ], function (err, record) {
+        ], (err, record) => {
             if (err) {
                 console.error(err);
                 return;
             }
             console.log(record[0].id);
             this.id = record[0].id;
+            this.fid = record[0].fields.id;
 
         });
     }
 
     update() {
-        base('tasks').replace([
-            {
-                "id": this.id,
-                "fields": {
-                    "name": this.name,
-                    "members": this.members,
-                    "status": this.status,
-                    "archived": this.archived,
-                    "dateFin": this.dateFin,
-                    "rappel": this.heureRappel
+        return new Promise((resolve, reject) => {
+            base('tasks').replace([
+                {
+                    "id": this.id,
+                    "fields": {
+                        "name": this.name,
+                        "members": this.members,
+                        "status": this.status,
+                        "archived": this.archived,
+                        "dateFin": this.dateFin,
+                        "rappel": this.heureRappel
+                    }
                 }
-            }
-        ], function (err, records) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            records.forEach(function (record) {
-                console.log(record.get('status'));
+            ], function (err, records) {
+                if (err) {
+                    console.error(err);
+                    reject();
+                }
+                records.forEach(function (record) {
+                    console.log('Updated ',record.id);
+                });
+                resolve();
             });
-        });
+        })
     }
 
     read() {
@@ -87,14 +92,7 @@ class Task {
         }
 
         let names = "";
-        if (memberList != null) {
-            for (let i = 0; i < memberList.length; i++) {
-                names += memberList[i].name;
-                if (i !== memberList.length - 1) {
-                    names += ', ';
-                }
-            }
-        }
+
 
 
         if (this.status === 0) {
@@ -102,14 +100,15 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div id="CollabNames-${this.id}"></div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
-                        <div class="">
-                            <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
-                            <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2 button"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
-                            <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
+                        <div class="m-1">
+                            <button class="btn btn-outline-success mx-2 my-1" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-primary mx-2 button my-1" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
+                            <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2 button my-1"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
+                            <button class="btn btn-danger mx-2 button my-1" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
@@ -118,15 +117,16 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div id="CollabNames-${this.id}"></div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
 
-                        <div class="">
-                            <span id="enCours" class="badge badge-danger mx-2">En cours</span>
-                            <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
-                            <button class="btn btn-success mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
-                            <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
+                        <div class="m-1">
+                            <span id="enCours" class="badge badge-danger mx-2 my-1">En cours</span>
+                            <button class="btn btn-outline-success mx-2 my-1" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-primary mx-2 button my-1" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
+                            <button class="btn btn-success mx-2 button my-1" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
+                            <button class="btn btn-danger mx-2 button my-1" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
@@ -135,15 +135,16 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div id="CollabNames-${this.id}"></div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
-                        <div class="">
-                            <span id="finie" class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
-                            <button class="btn btn-warning mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
-                            <button class="btn btn-secondary mx-2 button" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
+                        <div class="m-1">
+                            <span id="finie" class="badge badge-success mx-2 my-1">Finie</span>
+                            <button class="btn btn-outline-success mx-2 my-1" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-primary mx-2 button my-1" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
+                            <button class="btn btn-warning mx-2 button my-1" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
+                            <button class="btn btn-secondary mx-2 button my-1" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
@@ -152,8 +153,8 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <span>${names}</span>
-                            <span class="badge badge-secondary mx-2">${date}</span>
+                            <div id="CollabNames-${this.id}"></div>
+                            <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
                         <div class="">
@@ -164,6 +165,13 @@ class Task {
                     </div>
                     <hr class="my-1 mx-4">`);
         }
+        if (memberList != null) {
+            for (let i = 0; i < memberList.length; i++) {
+                $('#CollabNames-'+this.id).append(`<span class="badge badge-primary mx-2">${memberList[i].name}</span>`) ;
+
+            }
+        }
+
         setTimeout(function () {
             $('.task').css('opacity', 1);
         }, 200);
@@ -187,7 +195,7 @@ class Task {
         for (let json in localStorage) {
             let object = JSON.parse(localStorage.getItem(json));
 
-            if(!this.members) {
+            if (!this.members) {
                 this.members = [];
             }
 
@@ -222,7 +230,6 @@ function createTask(name, date, rappel) {
     date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
-        //t.addUser();
         t.addDateFin(date);
         t.addHrappel(rappel);
         t.save();
@@ -231,7 +238,7 @@ function createTask(name, date, rappel) {
     $('#taskName').val("");
     $('#addTaskModal').modal('hide');
     Swal.fire(
-        t.name + ' a bien été créée',
+        name + ' a bien été créée',
         '',
         'success'
     )
@@ -277,6 +284,9 @@ function putAllTasks() {
             console.error(err);
             return;
         }
+        taskList.sort(function(a, b) {
+            return a.fields.status - b.fields.status;
+        });
         for (let i = 0; i < taskList.length; i++) {
             let task = new Task(taskList[i].fields.name);
             task.id = taskList[i].id;
@@ -366,7 +376,7 @@ function searchInTasks(query) {
         records.forEach(function (record) {
             if (record.fields.name !== undefined) {
                 if (record.fields.name.toLowerCase().includes(query.toLowerCase())) {
-                    $('#tasklist').empty();
+                    // $('#tasklist').empty();
                     let t = new Task(record.fields.name);
                     t.read();
                 }
@@ -384,8 +394,7 @@ function refreshTask() {
     }
 }
 
-async function toggleCompleted(id) {
-
+function toggleCompleted(id) {
     getTask(id).then(function (task) {
         (task.status === 2) ? task.status = 1 : task.status = 2;
         task.update();
@@ -403,7 +412,6 @@ async function toggleCompleted(id) {
                 'success'
             )
         }
-
     });
 }
 
@@ -463,6 +471,7 @@ function editModal(id) {
     })
 }
 
+
 async function getMemberfromTask(task) {
     let memberList = [];
     base('members').select({
@@ -496,6 +505,30 @@ async function getMemberfromTask(task) {
 
         return names;
 
+    });
+}
+
+function assignToTask(id) {
+    getTask(id).then(function (task) {
+        console.log(authMember);
+
+        if (task.members == null) {
+            task.members = [authMember.id];
+        } else {
+            if (!task.members.includes(authMember.id)) {
+                task.members.push(authMember.id);
+            } else {
+                let indexOfMember = task.members.indexOf(authMember.id);
+                if (indexOfMember > -1) {
+                    task.members.splice(indexOfMember, 1);
+                }
+            }
+        }
+
+
+        task.update().then(function () {
+            refreshTask();
+        });
     });
 }
 

@@ -53,6 +53,8 @@
 <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-firestore.js"></script>
 
 <script src="assets/js/modal.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/member.js"></script>
 <script src="assets/js/nav.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -63,8 +65,7 @@
         crossorigin="anonymous"></script>
 
 
-<script src="assets/js/utils.js"></script>
-<script src="assets/js/member.js"></script>
+
 <script src="assets/js/task.js"></script>
 <noscript>
     <div class="jumbotron">
@@ -72,7 +73,7 @@
     </div>
 </noscript>
 
-<div class="container p-5">
+<div class="container-fluid p-5">
     <h1 class="display-4">Liste des tâches</h1>
     <hr class="mx-5 my-4">
     <div class="" id="tasklist"></div>
@@ -82,24 +83,16 @@
                 id="addtask-btn"><i class="fa fa-plus"></i>&nbsp;&nbsp;Ajouter une tâche
         </button>
         <!--<button class="btn btn-danger mx-2 w-25" id="deleteAllLocalStorage-btn"
-                onclick="if(!$('#deleteAllLocalStorage-btn').hasClass('disabled')){deleteAllAndClear();}"><i
-                class="fa fa-trash"></i>&nbsp;&nbsp;Tout supprimer
+                onclick="if(!$('#deleteAllLocalStorage-btn').hasClass('disabled')){saveAllMembers();}"><i
+                class="fa fa-trash"></i>&nbsp;&nbsp;Sauvegarder les membres
         </button>-->
     </div>
 </div>
 
-
 <script>
-    /*let test = new Task('Faire l\'apéro');
-    test.addMember(new Member('Florian', 'admin'));
-    test.addMember(new Member('Ophélie', 'user'));
-    test.status = 1;*/
-    init().then(function () {
+    //init().then(function () {
         putAllTasks();
-    })
-
-
-    //console.log(localStorage);
+    //});
 </script>
 </body>
 </html>
