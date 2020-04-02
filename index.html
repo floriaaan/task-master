@@ -81,10 +81,10 @@
                 onclick="if(!$('#addtask-btn').hasClass('disabled')){$('#addTaskModal').modal('show');}"
                 id="addtask-btn"><i class="fa fa-plus"></i>&nbsp;&nbsp;Ajouter une tâche
         </button>
-        <!--<button class="btn btn-danger mx-2 w-25" id="deleteAllLocalStorage-btn"
-                onclick="if(!$('#deleteAllLocalStorage-btn').hasClass('disabled')){deleteAllAndClear();}"><i
-                class="fa fa-trash"></i>&nbsp;&nbsp;Tout supprimer
-        </button>-->
+        <button class="btn btn-danger mx-2 w-25" id="deleteAllLocalStorage-btn"
+                onclick="if(!$('#deleteAllLocalStorage-btn').hasClass('disabled')){saveAllMembers();}"><i
+                class="fa fa-trash"></i>&nbsp;&nbsp;Sauvegarder les membres
+        </button>
     </div>
 </div>
 
@@ -92,8 +92,7 @@
 <script>
     init().then(function () {
         putAllTasks();
-    })
-    console.log(userLoggged)
+    });
 </script>
 </body>
 </html>

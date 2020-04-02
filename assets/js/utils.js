@@ -8,7 +8,7 @@ function convertJsonToTask(json) {
 }
 
 function convertJsonToMember(json) {
-    let member = new Member(json.name, json.role);
+    let member = new Member(json.name, json.role, json.mail);
     member.id = json.id;
 
     return member;
@@ -28,9 +28,11 @@ async function init() {
     }).then(function() {
         // console.log(memberList);
         for (let i = 0; i < memberList.length; i++) {
-            let member = new Member(memberList[i].fields.name, memberList[i].fields.role);
+            let member = new Member(memberList[i].fields.name, memberList[i].fields.role, memberList[i].fields.email);
             // console.log(member);
             member.id = memberList[i].id;
+            member.task = memberList[i].fields.task;
+            member.fromAirtable = 1;
             member.save();
         }
 

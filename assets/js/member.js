@@ -1,31 +1,41 @@
 class Member {
 
-    constructor(name, role) {
-        this.id = 'member-';
+    constructor(name, role, email) {
+        this.id = ;
         this.task = []; // jsp encore
         this.name = name;
         this.role = role;
-        for(let json in localStorage) {
-            console.log(JSON.parse(localStorage.getItem(json)));
-        }
-        this.mail = 'mail@mail.fr';     // Récupérer mail du membre authentifié
+        this.email = email;     // Récupérer mail du membre authentifié
+        this.fromAirtable = 0;
+        this.
 
 
     }
 
-    // save() {
-    //     localStorage.setItem(this.id, JSON.stringify(this));
-    // }
-
-
     save() {
-        base('members').create([
+        let inArray = false;
+        for(let json in localStorage) {
+            let object = JSON.parse(localStorage.getItem(json));
+            if (object != null && object.id != null && object.email === this.email) {
+                inArray = true;
+            }
+        }
+        if (!inArray) {
+            localStorage.setItem(this.id, JSON.stringify(this));
+        } else {
+            console.log('Already exists in LocalStorage')
+        }
+    }
+
+
+    saveAirtable() {
+        return base('members').create([
             {
                 "fields": {
                     "task": this.task,
                     "name": this.name,
                     "role": this.role,
-                    "email": this.mail,
+                    "email": this.email,
                 }
             },
 
@@ -34,9 +44,6 @@ class Member {
                 console.error(err);
                 return;
             }
-            // console.log(this);
-            // console.log(record[0].id);
-            // this.id = record[0].id;
 
         });
     }
@@ -63,7 +70,7 @@ class Member {
                     "task": this.task,
                     "name": this.name,
                     "role": this.role,
-                    "email": this.mail,
+                    "email": this.email,
                 }
             }
         ], function (err, record) {
@@ -111,5 +118,18 @@ function putAllMembers() {
         }
 
     }
+}
+
+function saveAllMembers() {
+    for(let json in localStorage) {
+        let object = JSON.parse(localStorage.getItem(json));
+
+        if (object != null && object.fromAirtable !== 1) {
+            let m = convertJsonToMember(object);
+            m.saveAirtable();
+        }
+
+    }
+
 }
 

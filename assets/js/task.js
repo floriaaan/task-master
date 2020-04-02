@@ -13,7 +13,6 @@ class Task {
 
     addMember(member) {
         member.save();
-        member.id = localStorage.getItem('mem');
         this.members.push(member.id);
     }
 
@@ -25,9 +24,9 @@ class Task {
         this.heureRappel = (heureRappel)
     }
 
-    addUser() {
-        if (userLoggged != null)
-            this.addMember(new Member(userLoggged.displayName, 'owner'));
+    own() {
+        if (userLogged != null)
+            this.addMember(new Member(userLogged.displayName, 'owner', $('#userEmail').val()));
     }
 
 
@@ -225,8 +224,8 @@ function createTask(name, date, rappel) {
     date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
-        t.addUser();
-        // t.addDateFin(date);
+        t.own();
+        t.addDateFin(date);
         t.addHrappel(rappel);
         t.save();
         t.read();
@@ -234,7 +233,7 @@ function createTask(name, date, rappel) {
     $('#taskName').val("");
     $('#addTaskModal').modal('hide');
     Swal.fire(
-        t.name + ' a bien été créée',
+        name + ' a bien été créée',
         '',
         'success'
     )
