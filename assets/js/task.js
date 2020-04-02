@@ -97,7 +97,7 @@ class Task {
 
         if (this.status === 0) {
             $('#tasklist').append(
-                `<div class="row justify-content-between task p-2" id="${this.id}">
+                `<div class="row justify-content-between task p-2" id="${this.id}-status${this.status}">
                         <div>
                             <p class="lead">${this.name}</p>
                             <div id="CollabNames-${this.id}"></div>
@@ -111,10 +111,10 @@ class Task {
                             <button class="btn btn-danger mx-2 button my-1" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
-                    <hr class="my-1 mx-4">`);
+                    <hr class="my-1 mx-4" id="hrfor${this.id}-status${this.status}">`);
         } else if (this.status === 1) {
             $('#tasklist').append(
-                `<div class="row justify-content-between task p-2" id="${this.id}">
+                `<div class="row justify-content-between task p-2" id="${this.id}-status${this.status}">
                         <div>
                             <p class="lead">${this.name}</p>
                             <div id="CollabNames-${this.id}"></div>
@@ -129,10 +129,10 @@ class Task {
                             <button class="btn btn-danger mx-2 button my-1" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
-                    <hr class="my-1 mx-4">`);
+                    <hr class="my-1 mx-4" id="hrfor${this.id}-status${this.status}">`);
         } else if (this.status === 2 && !this.archived) {
             $('#tasklist').append(
-                `<div class="row justify-content-between task p-2" id="${this.id}">
+                `<div class="row justify-content-between task p-2" id="${this.id}-status${this.status}">
                         <div>
                             <p class="lead">${this.name}</p>
                             <div id="CollabNames-${this.id}"></div>
@@ -140,14 +140,14 @@ class Task {
                         </div>
                         
                         <div class="m-1">
-                            <span id="finie" class="badge badge-success mx-2 my-1">Finie</span>
+                            <span id="finie" class="badge badge-success mx-2 my-1">Terminée</span>
                             <button class="btn btn-outline-success mx-2 my-1" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
                             <button class="btn btn-outline-primary mx-2 button my-1" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
                             <button class="btn btn-warning mx-2 button my-1" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
                             <button class="btn btn-secondary mx-2 button my-1" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
                     </div>
-                    <hr class="my-1 mx-4">`);
+                    <hr class="my-1 mx-4" id="hrfor${this.id}-status${this.status}">`);
         } else if (this.status === 2 && this.archived === 1) {
             $('#tasklist').append(
                 `<div class="row justify-content-between task p-2" id="${this.id}">
@@ -163,7 +163,7 @@ class Task {
                             <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
-                    <hr class="my-1 mx-4">`);
+                    <hr class="my-1 mx-4" id="hrfor${this.id}-status${this.status}">`);
         }
         if (memberList != null) {
             for (let i = 0; i < memberList.length; i++) {

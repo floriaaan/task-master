@@ -65,7 +65,6 @@
         crossorigin="anonymous"></script>
 
 
-
 <script src="assets/js/task.js"></script>
 <noscript>
     <div class="jumbotron">
@@ -75,7 +74,30 @@
 
 <div class="container-fluid p-5">
     <h1 class="display-4">Liste des tâches</h1>
-    <hr class="mx-5 my-4">
+    <hr class="mx-5 my-2">
+
+    <div class="row justify-content-between">
+        <div class="col-md-3">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="status0" checked>
+                <label class="custom-control-label" for="status0">Tâches à commencer</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="status1" checked>
+                <label class="custom-control-label" for="status1">Tâches en cours</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="status2" checked>
+                <label class="custom-control-label" for="status2">Tâches terminées</label>
+            </div>
+        </div>
+    </div>
+
+    <hr class="mx-5 my-2">
     <div class="" id="tasklist"></div>
     <div class="row justify-content-end jumbotron mt-5">
         <button class="btn btn-success mx-2 w-25"
@@ -90,9 +112,20 @@
 </div>
 
 <script>
-    //init().then(function () {
-        putAllTasks();
-    //});
+    putAllTasks();
+
+    $('#status0').click(function () {
+        $('[id*="status0"]').toggleClass('d-none')
+    });
+
+    $('#status1').click(function () {
+        $('[id*="status1"]').toggleClass('d-none')
+    });
+
+    $('#status2').click(function () {
+        $('[id*="status2"]').toggleClass('d-none')
+    });
+
 </script>
 </body>
 </html>
