@@ -48,9 +48,10 @@ class Member {
                     console.error(err);
                     reject();
                 }
-                console.log(record);
+
                 this.id = record[0].id;
                 this.fid = record[0].fields.id;
+                console.log(this);
                 resolve();
             });
         });

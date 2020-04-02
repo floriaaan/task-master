@@ -75,6 +75,14 @@ ui.start('#firebaseui-auth-container', {
                 authMember = new Member(authResult.user.displayName, 'user', authResult.user.email);
                 authMember.firebaseuid = authResult.user.uid;
                 authMember.saveAirtable();
+                init().then(function () {
+                    for (let json in localStorage) {
+                        let object = JSON.parse(localStorage.getItem(json));
+                        if(object != null && object.id != null && object.firebaseuid === authResult.user.uid) {
+                            authMember.id = object.id;
+                        }
+                    }
+                });
             }
         }
     },

@@ -77,7 +77,7 @@ class Task {
                     reject();
                 }
                 records.forEach(function (record) {
-                    console.log(record.get('status'));
+                    console.log('Updated ',record.id);
                 });
                 resolve();
             });
@@ -104,11 +104,11 @@ class Task {
                             <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
-                        <div class="">
-                            <button class="btn btn-outline-success mx-2" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
-                            <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
-                            <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2 button"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
-                            <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
+                        <div class="m-1">
+                            <button class="btn btn-outline-success mx-2 my-1" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-primary mx-2 button my-1" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
+                            <button id="commencer" onclick="startTask(\'${this.id}\')" class="btn btn-primary mx-2 button my-1"><i class="fa fa-times"></i>&nbsp;&nbsp;Commencer</button>
+                            <button class="btn btn-danger mx-2 button my-1" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
@@ -121,12 +121,12 @@ class Task {
                             <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
 
-                        <div class="">
-                            <span id="enCours" class="badge badge-danger mx-2">En cours</span>
-                            <button class="btn btn-outline-success mx-2" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
-                            <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
-                            <button class="btn btn-success mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
-                            <button class="btn btn-danger mx-2 button" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
+                        <div class="m-1">
+                            <span id="enCours" class="badge badge-danger mx-2 my-1">En cours</span>
+                            <button class="btn btn-outline-success mx-2 my-1" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-primary mx-2 button my-1" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
+                            <button class="btn btn-success mx-2 button my-1" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-check"></i>&nbsp;&nbsp;Terminer</button>
+                            <button class="btn btn-danger mx-2 button my-1" onclick="deleteModal(\'${this.id}\')"><i class="fa fa-trash"></i>&nbsp;&nbsp;Supprimer</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
@@ -139,12 +139,12 @@ class Task {
                             <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
-                        <div class="">
-                            <span id="finie" class="badge badge-success mx-2">Finie</span>
-                            <button class="btn btn-outline-success mx-2" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
-                            <button class="btn btn-outline-primary mx-2 button" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
-                            <button class="btn btn-warning mx-2 button" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
-                            <button class="btn btn-secondary mx-2 button" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
+                        <div class="m-1">
+                            <span id="finie" class="badge badge-success mx-2 my-1">Finie</span>
+                            <button class="btn btn-outline-success mx-2 my-1" onclick="assignToTask(\'${this.id}\')"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-outline-primary mx-2 button my-1" onclick="editModal(\'${this.id}\')"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;Editer</button>
+                            <button class="btn btn-warning mx-2 button my-1" onclick="toggleCompleted(\'${this.id}\')"><i class="fa fa-times"></i>&nbsp;&nbsp;Reprendre</button>
+                            <button class="btn btn-secondary mx-2 button my-1" onclick="archiveModal(\'${this.id}\')"><i class="fa fa-archive"></i>&nbsp;&nbsp;Archiver</button>
                         </div>
                     </div>
                     <hr class="my-1 mx-4">`);
@@ -284,6 +284,9 @@ function putAllTasks() {
             console.error(err);
             return;
         }
+        taskList.sort(function(a, b) {
+            return a.fields.status - b.fields.status;
+        });
         for (let i = 0; i < taskList.length; i++) {
             let task = new Task(taskList[i].fields.name);
             task.id = taskList[i].id;
