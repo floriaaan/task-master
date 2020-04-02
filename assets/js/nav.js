@@ -25,7 +25,7 @@ $('#body').append('<nav class="navbar navbar-expand-lg navbar-dark bg-dark">\n' 
     '                   aria-haspopup="true" aria-expanded="false">\n' +
     '                    Authentification\n' +
     '                </a>\n' +
-    '                <div class="dropdown-menu" style="width: 100vh; margin-right: 0" aria-labelledby="auth">\n' +
+    '                <div class="dropdown-menu" aria-labelledby="auth">\n' +
     '                    <div class="dropdown-item" id="sign-in" onclick="$(\'#login\').modal(\'show\')">Se connecter</div>\n' +
     '                    <div class="dropdown-item d-none" id="sign-out">Déconnexion</pre></div>' +
     '                </div>\n' +
@@ -71,13 +71,12 @@ ui.start('#firebaseui-auth-container', {
     callbacks : {
         signInSuccessWithAuthResult : function (authResult) {
             console.log(authResult);
-            console.log(authResult.additionalUserInfo);
             console.log(authResult.additionalUserInfo.isNewUser);
-            if(authResult.additionalUserInfo.isNewUser === true){
-                authMember = new Member(userLogged.displayName, 'user', userLogged.email);
+            if(authResult.additionalUserInfo.isNewUser){
+                authMember = new Member(authResult.user.displayName, 'user', authResult.user.email);
                 authMember.firebaseuid = authResult.user.uid;
-                console.log(authMember);
-                console.log(authMember.saveAirtable());
+                authMember.saveAirtable();
+                window.location.reload()
             }
         }
     },

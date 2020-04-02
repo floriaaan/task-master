@@ -3,7 +3,7 @@ class Task {
     constructor(name) {
         this.id = '';
         this.name = name; // Nom de la tâche
-        this.members = [2]; // Tableau d'objet Membre
+        this.members = []; // Tableau d'objet Membre
         this.status = 0; // Avancement de la tâche
         this.archived = 0;
         this.dateFin = ""; //Date de fin
@@ -58,28 +58,30 @@ class Task {
     }
 
     update() {
-        console.log(this.members);
-        base('tasks').replace([
-            {
-                "id": this.id,
-                "fields": {
-                    "name": this.name,
-                    "members": this.members,
-                    "status": this.status,
-                    "archived": this.archived,
-                    "dateFin": this.dateFin,
-                    "rappel": this.heureRappel
+        return new Promise((resolve, reject) => {
+            base('tasks').replace([
+                {
+                    "id": this.id,
+                    "fields": {
+                        "name": this.name,
+                        "members": this.members,
+                        "status": this.status,
+                        "archived": this.archived,
+                        "dateFin": this.dateFin,
+                        "rappel": this.heureRappel
+                    }
                 }
-            }
-        ], function (err, records) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            records.forEach(function (record) {
-                console.log(record.get('status'));
+            ], function (err, records) {
+                if (err) {
+                    console.error(err);
+                    reject();
+                }
+                records.forEach(function (record) {
+                    console.log(record.get('status'));
+                });
+                resolve();
             });
-        });
+        })
     }
 
     read() {
@@ -90,14 +92,7 @@ class Task {
         }
 
         let names = "";
-        if (memberList != null) {
-            for (let i = 0; i < memberList.length; i++) {
-                names += memberList[i].name;
-                if (i !== memberList.length - 1) {
-                    names += ', ';
-                }
-            }
-        }
+
 
 
         if (this.status === 0) {
@@ -105,7 +100,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <div>${names}</div>
+                            <div id="CollabNames-${this.id}"></div>
                             <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
@@ -122,7 +117,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <div>${names}</div>
+                            <div id="CollabNames-${this.id}"></div>
                             <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
 
@@ -140,7 +135,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <div>${names}</div>
+                            <div id="CollabNames-${this.id}"></div>
                             <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
@@ -158,7 +153,7 @@ class Task {
                 `<div class="row justify-content-between task p-2" id="${this.id}">
                         <div>
                             <p class="lead">${this.name}</p>
-                            <div>${names}</div>
+                            <div id="CollabNames-${this.id}"></div>
                             <div class="badge badge-secondary mx-2">${date}</div>
                         </div>
                         
@@ -170,6 +165,13 @@ class Task {
                     </div>
                     <hr class="my-1 mx-4">`);
         }
+        if (memberList != null) {
+            for (let i = 0; i < memberList.length; i++) {
+                $('#CollabNames-'+this.id).append(`<span class="badge badge-primary mx-2">${memberList[i].name}</span>`) ;
+
+            }
+        }
+
         setTimeout(function () {
             $('.task').css('opacity', 1);
         }, 200);
@@ -228,7 +230,6 @@ function createTask(name, date, rappel) {
     date = moment(date).format('YYYY-MM-DD h:mm');
     if (name != null) {
         let t = new Task(name);
-        //t.own();
         t.addDateFin(date);
         t.addHrappel(rappel);
         t.save();
@@ -522,8 +523,9 @@ function assignToTask(id) {
         }
 
 
-        task.update();
-        refreshTask();
+        task.update().then(function () {
+            refreshTask();
+        });
     });
 }
 
