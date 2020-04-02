@@ -121,7 +121,7 @@ initAuth = function () {
                         authMember.id = object.id;
                     }
                 }
-                localStorage.setItem('authMember', JSON.stringify(authMember));
+                //localStorage.setItem('authMember', JSON.stringify(authMember));
             });
 
         } else {
