@@ -70,13 +70,11 @@ ui.start('#firebaseui-auth-container', {
     ],
     callbacks : {
         signInSuccessWithAuthResult : function (authResult) {
-            console.log(authResult);
-            console.log(authResult.additionalUserInfo.isNewUser);
+
             if(authResult.additionalUserInfo.isNewUser){
                 authMember = new Member(authResult.user.displayName, 'user', authResult.user.email);
                 authMember.firebaseuid = authResult.user.uid;
                 authMember.saveAirtable();
-                window.location.reload()
             }
         }
     },
@@ -105,10 +103,9 @@ initApp = function () {
                 $('#userEmail').val(user.email);
                 authMember = new Member(userLogged.displayName, 'user', userLogged.email);
                 authMember.firebaseuid = user.uid;
-                console.log(localStorage)
                 for (let json in localStorage) {
                     let object = JSON.parse(localStorage.getItem(json));
-                    if(object != null && object.id != null &&object.firebaseuid === user.uid) {
+                    if(object != null && object.id != null && object.firebaseuid === user.uid) {
                         console.log(object)
                         authMember.id = object.id;
                     }
